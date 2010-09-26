@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Deneb</name>
+ <channel>pear.php.net</channel>
+ <summary>Simple CRUD layer for DB based models</summary>
+ <description>Deneb provides a consistent CRUD interface to using Zend_Db base models and model collections, as well as segregated read and write DB pools and selectors</description>
+ <lead>
+  <name>Bill Shupp</name>
+  <user>shupp</user>
+  <email>hostmaster@shupp.org</email>
+  <active>yes</active>
+ </lead>
+ <date>2010-09-26</date>
+ <time>12:21:03</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+ <notes>
+* Initial release
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <dir name="Deneb">
+    <dir name="Collection">
+     <file name="Common.php" role="php" />
+    </dir> <!-- /Deneb/Collection -->
+    <dir name="DB">
+     <file name="Exception.php" role="php" />
+     <file name="Selector.php" role="php" />
+    </dir> <!-- /Deneb/DB -->
+    <dir name="Exception">
+     <file name="NotFound.php" role="php" />
+    </dir> <!-- /Deneb/Exception -->
+    <dir name="Object">
+     <file name="Common.php" role="php" />
+     <file name="Interface.php" role="php" />
+    </dir> <!-- /Deneb/Object -->
+    <file name="Exception.php" role="php" />
+   </dir> <!-- /Deneb -->
+   <dir name="tests">
+    <dir name="Deneb">
+     <dir name="DB">
+      <file name="SelectorTest.php" role="test" />
+     </dir> <!-- /tests/Deneb/DB -->
+     <file name="AllTests.php" role="test" />
+     <file name="Dummy.php" role="test" />
+     <file name="DummyCollection.php" role="test" />
+     <file name="DummyCollectionTest.php" role="test" />
+     <file name="DummyTest.php" role="test" />
+     <file name="TestCase.php" role="test" />
+    </dir> <!-- /tests/Deneb -->
+   </dir> <!-- /tests -->
+   <file name="Deneb.php" role="php" />
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <package>
+    <name>Zend</name>
+    <channel>zend.googlecode.com/svn</channel>
+    <min>1.10.7</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2010-09-26</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Initial release
+   </notes>
+  </release>
+ </changelog>
+</package>
