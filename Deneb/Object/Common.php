@@ -42,6 +42,12 @@ abstract class Deneb_Object_Common
      */
     protected $_primaryKey = 'id';
 
+    /**
+     * Whether to automatically populate a date_created column with the
+     * current timestamp.  Defaults to false
+     *
+     * @var bool
+     */
     protected $_enableDateCreated = false;
 
     /**
@@ -120,6 +126,32 @@ abstract class Deneb_Object_Common
     public function __set($name, $value)
     {
         $this->_values[$name] = $value;
+    }
+
+    /**
+     * Magic __unset () method implementation.  Allows for easily unsetting
+     * property values.
+     *
+     * @param string $name The property value to unset
+     *
+     * @return void
+     */
+    public function __unset($name)
+    {
+        unset($this->_values[$name]);
+    }
+
+    /**
+     * Magic __isset() method implementation.  Allows for easy checking
+     * whether a value is set or not
+     *
+     * @param string $name The property name to check
+     *
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return isset($this->_values[$name]);
     }
 
     /**

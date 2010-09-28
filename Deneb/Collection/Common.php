@@ -66,7 +66,7 @@ implements Iterator, Countable
      * Talks to the data store and instantiates the objects
      *
      * @param array $args    The key/values that can be used in a where clause
-     * @param array $options Optional limits, offset, sort, and sort_direction
+     * @param array $options Optional limits, offset, order, group, and having
      *
      * @return void
      */

@@ -27,7 +27,7 @@ class Deneb_DummyCollectionTest extends Deneb_TestCase
         $stmt = Zend_Test_DbStatement::createSelectStatement($rows);
         $this->_connectionMock->appendStatementToStack($stmt);
 
-        $this->_object->__construct(array('status' => 0, 'id' => array(1, 2)), array('limit' => 2, 'offset' => 0, 'sort' => 'id', 'sort_direction' => 'ASC'));
+        $this->_object->__construct(array('status' => 0, 'id' => array(1, 2)), array('limit' => 2, 'offset' => 0, 'order' => 'id', 'group' => 'id', 'having' => 'id > 0'));
         $this->assertSame($this->_object->key(), 0);
         $this->assertTrue($this->_object->valid());
         $this->assertSame($this->_object->current()->id, 1);

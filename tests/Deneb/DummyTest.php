@@ -61,6 +61,18 @@ class Deneb_DummyTest extends Deneb_TestCase
         $this->assertSame('barfoo', $this->_object->foobar);
     }
 
+    public function testMagicIssetUnset()
+    {
+        $this->_object->__construct();
+        $this->assertFalse(isset($this->_object->foobar));
+        $this->_object->foobar = 'barfoo';
+        $this->assertTrue(isset($this->_object->foobar));
+        unset($this->_object->foobar);
+        $this->assertFalse(isset($this->_object->foobar));
+        unset($this->_object->foobar);
+        $this->assertFalse(isset($this->_object->foobar));
+    }
+
     public function testSetGet()
     {
         $this->_object->__construct();

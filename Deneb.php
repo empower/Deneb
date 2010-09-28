@@ -157,7 +157,7 @@ abstract class Deneb
     }
 
     /**
-     * Parses any limit, offset, sort, and sort_direction options for the query
+     * Parses any limit, offset, order, group, and having options for the query
      *
      * @param array $options Options array
      *
@@ -172,14 +172,16 @@ abstract class Deneb
 
         $limits = '';
 
-        if (isset($options['sort'])) {
-            $limits .= ' ORDER BY ' . $options['sort'];
+        if (isset($options['group'])) {
+            $limits .= ' GROUP BY ' . $options['group'];
         }
 
-        if (isset($options['sort_direction'])) {
-            $direction = strtoupper($options['sort_direction']) == 'ASC'
-                         ? 'ASC' : 'DESC';
-            $limits .= " $direction ";
+        if (isset($options['having'])) {
+            $limits .= ' HAVING ' . $options['having'];
+        }
+
+        if (isset($options['order'])) {
+            $limits .= ' ORDER BY ' . $options['order'];
         }
 
         if (isset($options['limit'])) {
