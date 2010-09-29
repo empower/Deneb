@@ -125,8 +125,12 @@ abstract class Deneb
                 $where .= ' AND';
             }
             if (is_array($value)) {
-                $quoted = array_map(array($this, 'quoteArrayContents'), $value);
-                $where .= ' ' . $key . ' IN (' . implode(',', $quoted) . ')';
+                if (count($value)) {
+                    $quoted = array_map(
+                        array($this, 'quoteArrayContents'), $value
+                    );
+                    $where .= ' ' . $key . ' IN (' . implode(',', $quoted) . ')';
+                }
             } elseif ($value instanceof Zend_Db_Expr) {
                 // Notice there's no assignment here - that's for use with
                 // bitwise statements
