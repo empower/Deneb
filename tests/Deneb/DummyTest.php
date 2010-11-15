@@ -203,4 +203,31 @@ class Deneb_DummyTest extends Deneb_TestCase
         $this->_object->__construct();
         $this->assertSame('id', $this->_object->getPrimaryKey());
     }
+
+    public function testSetExceptionType()
+    {
+        $this->setExpectedException('Deneb_Exception', 'Invalid exception type');
+
+        // Set them to something else
+        Deneb::setExceptionName('base', 'FoobarException');
+        Deneb::setExceptionName('notfound', 'FoobarException');
+
+        // Set them back
+        Deneb::setExceptionName('base', 'Deneb_Exception');
+        Deneb::setExceptionName('notfound', 'Deneb_Exception_NotFound');
+
+        // Test setting failure
+        Deneb::setExceptionName('foobar', 'FoobarException');
+    }
+
+    public function testSetLog()
+    {
+        $stream = fopen('/dev/null', 'a', false);
+        $writer = new Zend_Log_Writer_Stream($stream);
+        $logger = new Zend_Log($writer);
+
+        Deneb::setLog($logger);
+        $this->_object->__construct();
+        $this->assertSame($logger, $this->_object->getLog());
+    }
 }

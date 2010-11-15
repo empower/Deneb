@@ -37,6 +37,27 @@ abstract class Deneb
     static protected $_application = null;
 
     /**
+     * Name of the general deneb exception to throw
+     *
+     * @see setExceptionName()
+     */
+    static protected $_exceptionName = 'Deneb_Exception';
+
+    /**
+     * Name of the not found deneb exception to throw
+     *
+     * @see setExceptionName()
+     */
+    static protected $_exceptionNotFoundName = 'Deneb_Exception_NotFound';
+
+    /**
+     * Instance of Zend_Log
+     *
+     * @see getLog()
+     */
+    static protected $_log = null;
+
+    /**
      * The read instance of Zend_Db_Adapter
      *
      * @var Zend_Db_Adapter
@@ -232,8 +253,23 @@ abstract class Deneb
      */
     public function getLog()
     {
-        return self::getApplication()->getBootstrap()
-                                     ->getResource('Log');
+        if (self::$_log === null) {
+            self::$_log = self::getApplication()->getBootstrap()
+                                                ->getResource('Log');
+        }
+        return self::$_log;
+    }
+
+    /**
+     * Sets a custom instance of Zend_Log
+     *
+     * @param Zend_Log $log The logger instance
+     *
+     * @return void
+     */
+    public static function setLog($log)
+    {
+        self::$_log = $log;
     }
 
     /**
@@ -256,5 +292,28 @@ abstract class Deneb
     static public function getApplication()
     {
         return self::$_application;
+    }
+
+    /**
+     * Sets the name of exception to use
+     *
+     * @param mixed $type base, db, notfound
+     * @param mixed $name The class name to throw
+     *
+     * @return void
+     * @throws Deneb_Exception on invalid type
+     */
+    static public function setExceptionName($type, $name)
+    {
+        switch ($type) {
+            case 'base':
+                self::$_exceptionName = $name;
+                break;
+            case 'notfound':
+                self::$_exceptionNotFoundName = $name;
+                break;
+            default:
+                throw new Deneb_Exception('Invalid exception type');
+        }
     }
 }

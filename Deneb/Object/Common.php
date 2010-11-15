@@ -82,7 +82,7 @@ abstract class Deneb_Object_Common
             $this->getLog()->debug("Object SQL: " . $sql);
             $this->_results = $this->_getReadDB()->fetchAll($sql);
             if (!count($this->_results)) {
-                throw new Deneb_Exception_NotFound(
+                throw new static::$_exceptionNotFoundName(
                     'No ' . $this->_object . ' found: '
 
                     . print_r($args, true)
@@ -191,7 +191,7 @@ abstract class Deneb_Object_Common
         }
 
         if (isset($this->_values[$this->_primaryKey])) {
-            throw new Deneb_Exception('Primary key value already set');
+            throw new static::$_exceptionName('Primary key value already set');
         }
 
         if ($this->_enableDateCreated
@@ -214,7 +214,7 @@ abstract class Deneb_Object_Common
     public function update()
     {
         if (!isset($this->_values[$this->_primaryKey])) {
-            throw new Deneb_Exception('Primary key value is not set');
+            throw new static::$_exceptionName('Primary key value is not set');
         }
 
         $where = "{$this->_primaryKey} = {$this->_values[$this->_primaryKey]}";
@@ -237,7 +237,7 @@ abstract class Deneb_Object_Common
         }
 
         if (!isset($this->_values[$this->_primaryKey])) {
-            throw new Deneb_Exception('Primary key value is not set');
+            throw new static::$_exceptionName('Primary key value is not set');
         }
 
         $where  = $this->_primaryKey . ' = ';

@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2010-09-26</date>
- <time>12:21:03</time>
+ <date>2010-11-15</date>
+ <time>12:45:32</time>
  <version>
-  <release>0.1.0</release>
-  <api>0.1.0</api>
+  <release>0.2.0</release>
+  <api>0.2.0</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,7 +25,7 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Initial release
+* Added support for custom exceptions
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -58,8 +58,10 @@
      <file name="DummyTest.php" role="test" />
      <file name="TestCase.php" role="test" />
     </dir> <!-- /tests/Deneb -->
+    <file name="FoobarException.php" role="test" />
    </dir> <!-- /tests -->
    <file name="Deneb.php" role="php" />
+   <file name="README.md" role="data" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
@@ -92,6 +94,21 @@
    <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
    <notes>
 * Initial release
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2010-11-15</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Added support for custom exceptions
    </notes>
   </release>
  </changelog>

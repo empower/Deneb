@@ -82,7 +82,7 @@ implements Iterator, Countable
         $this->getLog()->debug('Collection SQL: ' . $sql);
         $this->_results = $this->_getReadDB()->fetchAll($sql);
         if (!count($this->_results)) {
-            throw new Deneb_Exception_NotFound(
+            throw new static::$_exceptionNotFoundName(
                 'No ' . $this->_name . ' objects found'
             );
         }
@@ -118,7 +118,7 @@ implements Iterator, Countable
     public function getByPrimaryKey($key)
     {
         if (!isset($this->_collectionByPrimaryKey[$key])) {
-            throw new Deneb_Exception_NotFound(
+            throw new static::$_exceptionNotFoundName(
                 'Primary key not found: ' . $key
             );
         }
