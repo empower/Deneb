@@ -63,6 +63,12 @@ implements Iterator, Countable
     protected $_collectionByPrimaryKey = array();
 
     /**
+     * Arguments passed to the constructor, used in later calls e.g. countAll()
+     * @var array
+     */
+    protected $_args = array();
+
+    /**
      * Talks to the data store and instantiates the objects
      *
      * @param array $args    The key/values that can be used in a where clause
@@ -74,6 +80,7 @@ implements Iterator, Countable
     {
         $this->_position = 0;
         $this->_init();
+        $this->_args    = $args;
 
         $where  = $this->_determineWhere($args);
         $limits = $this->_determineOptions($options);
@@ -133,6 +140,20 @@ implements Iterator, Countable
     public function getPrimaryKeys()
     {
         return array_keys($this->_collectionByPrimaryKey);
+    }
+
+    /**
+     * Returns the total number of objects that would be returned under the specified
+     *   conditions (ignoring options)
+     *
+     * @return int
+     */
+    public function countAll()
+    {
+        $where  = $this->_determineWhere($this->_args);
+        $sql = "SELECT COUNT(*) FROM {$this->_table} $where";
+        $this->getLog()->debug('Collection countAll SQL: ' . $sql);
+        return (int) $this->_getReadDB()->query($sql)->fetchColumn();
     }
 
     /**

@@ -122,4 +122,27 @@ class Deneb_DummyCollectionTest extends Deneb_TestCase
         $this->_object->__construct(array());
         $object = $this->_object->getByPrimaryKey(3);
     }
+
+    public function testCountAll()
+    {
+        $rows = array(
+            array(
+                'id' => 2,
+                'username' => 'dcopeland',
+                'email' => 'dcopeland@empowercampaigns.com',
+                'status' => 0
+            ),
+        );
+
+        $stmt2 = Zend_Test_DbStatement::createSelectStatement(array(array('COUNT(*)' => 10)));
+        $this->_connectionMock->appendStatementToStack($stmt2);
+        $stmt = Zend_Test_DbStatement::createSelectStatement($rows);
+        $this->_connectionMock->appendStatementToStack($stmt);
+
+        $this->_object->__construct(array('status' => 0, 'id' => array(1, 2)), array('limit' => 1, 'offset' => 0, 'order' => 'id DESC'));
+        $this->assertSame(1, count($this->_object));
+        $this->assertTrue($this->_object->valid());
+        $this->assertSame($this->_object->current()->id, 2);
+        $this->assertSame(10, $this->_object->countAll());
+    }
 }
