@@ -69,10 +69,17 @@ implements Iterator, Countable
     protected $_args = array();
 
     /**
-     * Talks to the data store and instantiates the objects
+     * Options passed to the constructor, used in later calls
+     * @var array
+     */
+    protected $_options = array();
+
+    /**
+     * Sets parameters and options for collection inclusion, then optionally talks to
+     *   the data store and instantiates the objects
      *
      * @param array $args    The key/values that can be used in a where clause
-     * @param array $options Optional limits, offset, order, group, and having
+     * @param array $options Optional limits, offset, order, group, having, fetch
      *
      * @return void
      */
@@ -81,9 +88,23 @@ implements Iterator, Countable
         $this->_position = 0;
         $this->_init();
         $this->_args    = $args;
+        $this->_options = $options;
 
-        $where  = $this->_determineWhere($args);
-        $limits = $this->_determineOptions($options);
+        if (!isset($options['fetch']) or $options['fetch'] == true) {
+            $this->fetch();
+        }
+    }
+
+    /**
+     * Fetch collection objects - usually done by constuctor, but not if
+     *   options['fetch'] = false
+     *
+     * @return null
+     */
+    public function fetch()
+    {
+        $where  = $this->_determineWhere($this->_args);
+        $limits = $this->_determineOptions($this->_options);
 
         $sql = "SELECT * FROM {$this->_table} $where $limits";
         $this->getLog()->debug('Collection SQL: ' . $sql);

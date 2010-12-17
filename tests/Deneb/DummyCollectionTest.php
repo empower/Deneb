@@ -145,4 +145,30 @@ class Deneb_DummyCollectionTest extends Deneb_TestCase
         $this->assertSame($this->_object->current()->id, 2);
         $this->assertSame(10, $this->_object->countAll());
     }
+
+    public function testDelayedFetch()
+    {
+        $rows = array(
+            array(
+                'id' => 1,
+                'username' => 'shupp',
+                'email' => 'bshupp@empowercampaigns.com',
+                'status' => 0
+            ),
+            array(
+                'id' => 2,
+                'username' => 'dcopeland',
+                'email' => 'dcopeland@empowercampaigns.com',
+                'status' => 0
+            ),
+        );
+
+        $stmt = Zend_Test_DbStatement::createSelectStatement($rows);
+        $this->_connectionMock->appendStatementToStack($stmt);
+
+        $this->_object->__construct(array('status' => 0), array('fetch' => false));
+        $this->assertSame(array(), $this->_object->getPrimaryKeys());
+        $this->_object->fetch();
+        $this->assertSame(array(1,2), $this->_object->getPrimaryKeys());
+    }
 }
