@@ -24,7 +24,7 @@ $packagexml->setDescription(
     'Deneb provides a consistent CRUD interface to using Zend_Db base models and model collections, as well as segregated read and write DB pools and selectors'
 );
 
-$packagexml->setChannel('pear.php.net');
+$packagexml->setChannel('shupp.github.com/pirum');
 $packagexml->setAPIVersion('0.3.0');
 $packagexml->setReleaseVersion('0.3.0');
 

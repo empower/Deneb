@@ -4,7 +4,7 @@
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
  <name>Deneb</name>
- <channel>pear.php.net</channel>
+ <channel>shupp.github.com/pirum</channel>
  <summary>Simple CRUD layer for DB based models</summary>
  <description>Deneb provides a consistent CRUD interface to using Zend_Db base models and model collections, as well as segregated read and write DB pools and selectors</description>
  <lead>
@@ -14,7 +14,7 @@
   <active>yes</active>
  </lead>
  <date>2010-12-24</date>
- <time>20:16:04</time>
+ <time>20:52:56</time>
  <version>
   <release>0.3.0</release>
   <api>0.3.0</api>
