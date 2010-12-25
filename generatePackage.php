@@ -25,14 +25,17 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('pear.php.net');
-$packagexml->setAPIVersion('0.2.0');
-$packagexml->setReleaseVersion('0.2.0');
+$packagexml->setAPIVersion('0.3.0');
+$packagexml->setReleaseVersion('0.3.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
-$packagexml->setNotes('* Added support for custom exceptions');
+$packagexml->setNotes('
+* Added countAll() method for collections
+* Added delayed fetch (no automatic trip to DB) for collections
+');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
 
