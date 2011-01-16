@@ -58,6 +58,13 @@ abstract class Deneb
     static protected $_log = null;
 
     /**
+     * Instance of Zend_Cache
+     *
+     * @see getCache()
+     */
+    static protected $_cache = null;
+
+    /**
      * The read instance of Zend_Db_Adapter
      *
      * @var Zend_Db_Adapter
@@ -113,6 +120,14 @@ abstract class Deneb
      * @see getReadDB(), getWriteDB()
      */
     protected $_dbSelectorInstance = null;
+
+    /**
+     * Arguments passed to the constructor, used in later calls e.g. countAll()
+     * in collections
+     *
+     * @var array
+     */
+    protected $_args = array();
 
     /**
      * Loads up the read and write Zend_Db_Adapter objects
@@ -315,5 +330,27 @@ abstract class Deneb
             default:
                 throw new Deneb_Exception('Invalid exception type');
         }
+    }
+
+    /**
+     * Sets an instance of Zend_Cache to use
+     * 
+     * @param Zend_Cache $cache The Zend_Cache instance
+     * 
+     * @return void
+     */
+    static public function setCache($cache)
+    {
+        self::$_cache = $cache;
+    }
+
+    /**
+     * Gets the Zend_Cache instance
+     * 
+     * @return Zend_Cache|null
+     */
+    public function getCache()
+    {
+        return self::$_cache;
     }
 }

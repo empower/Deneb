@@ -63,12 +63,6 @@ implements Iterator, Countable
     protected $_collectionByPrimaryKey = array();
 
     /**
-     * Arguments passed to the constructor, used in later calls e.g. countAll()
-     * @var array
-     */
-    protected $_args = array();
-
-    /**
      * Options passed to the constructor, used in later calls
      * @var array
      */
@@ -90,7 +84,7 @@ implements Iterator, Countable
         $this->_args    = $args;
         $this->_options = $options;
 
-        if (!isset($options['fetch']) or $options['fetch'] == true) {
+        if (!isset($options['fetch']) || $options['fetch'] == true) {
             $this->fetch();
         }
     }
@@ -106,34 +100,169 @@ implements Iterator, Countable
         $where  = $this->_determineWhere($this->_args);
         $limits = $this->_determineOptions($this->_options);
 
-        $sql = "SELECT * FROM {$this->_table} $where $limits";
-        $this->getLog()->debug('Collection SQL: ' . $sql);
-        $this->_results = $this->_getReadDB()->fetchAll($sql);
-        if (!count($this->_results)) {
+        $object    = new $this->_object();
+        $cacheable = $object->isCacheable();
+
+        if ($cacheable) {
+            $this->_fetchFromCacheOrDB($where, $limits, $object);
+        } else {
+            $this->_fetchFromDB($where, $limits);
+        }
+    }
+
+    /**
+     * Looks up the matching IDs for this collection, and then tries to populate
+     * $_results from the cache first.  Any misses are gotten from the DB.
+     * 
+     * @param string              $where  The where clause as determined
+     *                                    by _determineWhere()
+     * @param string              $limits The limits clause as determined
+     *                                    by _determineLimits()
+     * @param Model_Object_Common $object An instance of the object for cache access
+     * 
+     * @throws Model_Exception_NotFound on empty results
+     * @return void
+     */
+    protected function _fetchFromCacheOrDB($where, $limits, $object)
+    {
+        $pk = $object->getPrimaryKey();
+
+        // See if we can skip the ID lookup
+
+        if (count($this->_args) === 1      // Only one element in args
+            && empty($this->options)       // No options are being used
+            && isset($this->_args[$pk])    // That arg is the primary key
+            && is_array($this->_args[$pk]) // Its value is an array
+            && count($this->_args[$pk])) { // The array is not empty
+
+            $keyResults = array();
+            foreach ($this->_args[$pk] as $value) {
+                $keyResults[] = array($pk => $value);
+            }
+        } else {
+            // Look up IDs from the DB
+            $sql = "SELECT {$pk} FROM {$this->_table} $where $limits";
+            $this->getLog()->debug('Collection SQL by key: ' . $sql);
+            $keyResults = $this->_getReadDB()->fetchAll($sql);
+        }
+
+        if (!count($keyResults)) {
             throw new static::$_exceptionNotFoundName(
                 'No ' . $this->_name . ' objects found'
             );
         }
-        $this->_loadObjects();
+
+        // Order results and check the cache first
+        $orderedList = array();
+        foreach ($keyResults as $result) {
+            $orderedList[$result[$pk]] = $object->getFromCache(
+                array($pk => $result[$pk])
+            );
+        }
+
+        // Fetch misses from DB if present
+        $misses = array();
+        foreach ($orderedList as $key => $value) {
+            if ($value === false) {
+                $misses[$key] = false;
+            }
+        }
+        if (count($misses)) {
+            $idWhere = $this->_determineWhere(
+                array($pk => array_keys($misses))
+            );
+            $sql = "SELECT * FROM {$this->_table} $idWhere";
+            $this->getLog()->debug('Collection SQL for misses: ' . $sql);
+            $missResults = $this->_getReadDB()->fetchAll($sql);
+
+            foreach ($missResults as $result) {
+                $misses[$result[$pk]] = $result;
+            }
+        }
+
+        // Map results and load them
+        foreach ($orderedList as $key => $value) {
+            if ($value === false) {
+                if ($misses[$key] !== false) {
+                    $orderedList[$key] = $misses[$key];
+                } else {
+                    // That item got removed from the DB recently
+                    $this->getLog()->info(
+                        "Item found in id list no longer in db: $key."
+                        . " Removing from results set"
+                    );
+                    unset($orderedList[$key]);
+                    unset($misses[$key]);
+                }
+            }
+        }
+
+        if (!count($orderedList)) {
+            throw new static::$_exceptionNotFoundName(
+                'No ' . $this->_name . ' objects found'
+            );
+        }
+        $this->_loadObjects($orderedList);
+
+        // Update cache for any misses
+        foreach (array_keys($misses) as $miss) {
+            $this->getByPrimaryKey($miss)->updateCache();
+        }
     }
 
     /**
-     * Takes {$this->_results} and loads it up into Deneb_Object_Common
-     * instances, stored in {$this->_collection}
-     *
+     * Fetches results from the DB
+     * 
+     * @param string $where  The where clause as determined by _determineWhere()
+     * @param string $limits The limits clause as determined by _determineLimits()
+     * 
+     * @throws Model_Exception_NotFound on empty results
      * @return void
      */
-    protected function _loadObjects()
+    protected function _fetchFromDB($where, $limits)
     {
-        foreach ($this->_results as $item) {
-            $class    = $this->_object;
-            $instance = new $class;
-            $instance->set($item);
-            $this->_collection[] = $instance;
-            $pk                  = $instance->getPrimaryKey();
-
-            $this->_collectionByPrimaryKey[$instance->{$pk}] = $instance;
+        $sql = "SELECT * FROM {$this->_table} $where $limits";
+        $this->getLog()->debug('Collection SQL: ' . $sql);
+        $results = $this->_getReadDB()->fetchAll($sql);
+        if (!count($results)) {
+            throw new static::$_exceptionNotFoundName(
+                'No ' . $this->_name . ' objects found'
+            );
         }
+        $this->_loadObjects($results);
+    }
+
+    /**
+     * Takes an array of results and loads it up into Deneb_Object_Common
+     * instances, stored in {$this->_collection}
+     * 
+     * @param array $results The results from fetchAll()
+     * 
+     * @return void
+     */
+    protected function _loadObjects(array $results)
+    {
+        foreach ($results as $item) {
+            $this->_collection[] = $this->_loadObject($item);
+        }
+    }
+
+    /**
+     * Instantiates an object from a query result, assigns it to
+     * $_collectionByPrimaryKey, and returns it
+     * 
+     * @param array $result The row result from the DB or Cache
+     * 
+     * @return Deneb_Object_Common
+     */
+    protected function _loadObject(array $result)
+    {
+        $instance = new $this->_object;
+        $instance->set($result);
+        $pk = $instance->getPrimaryKey();
+        $this->_collectionByPrimaryKey[$instance->{$pk}] = $instance;
+
+        return $instance;
     }
 
     /**

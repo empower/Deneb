@@ -2,7 +2,6 @@
 /**
  * Deneb_Object_Common
  *
- *
  * @uses      Deneb
  * @uses      Deneb_Object_Interface
  * @category  Deneb
@@ -51,6 +50,20 @@ abstract class Deneb_Object_Common
     protected $_enableDateCreated = false;
 
     /**
+     * A list of additional columns to cache an object by
+     * 
+     * @var array
+     */
+    protected $_additionalCacheIndexes = array();
+
+    /**
+     * Whether caching should be enabled for this object
+     * 
+     * @var bool
+     */
+    protected $_cacheEnabled = true;
+
+    /**
      * Calls {@link _init()} and sets the values of arguments were passed
      *
      * Read example:
@@ -70,13 +83,24 @@ abstract class Deneb_Object_Common
      * @param array $args Arguments to used in a "where clause"
      *
      * @return void
+     * @throws Deneb_Exception_NotFound on lookup failure
      */
     public function __construct(array $args = array())
     {
         $this->_init();
+        $this->_args = $args;
 
         if (!empty($args)) {
+            // Try to get the data from the cache
+            $fromCache = $this->getFromCache($args);
+            if ($fromCache !== false) {
+                $this->_values = $fromCache;
+                return;
+            }
+
+            // Else, do the lookup manually and then cache it
             $this->_loadFromDB($args);
+            $this->updateCache();
         }
     }
 
@@ -105,6 +129,125 @@ abstract class Deneb_Object_Common
             );
         }
         $this->_values = current($this->_results);
+    }
+
+    /**
+     * Allows external checking of whether caching can be used
+     * 
+     * @return bool
+     */
+    public function isCacheable()
+    {
+        if ($this->_cacheEnabled && self::$_cache !== null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets object data from the cache and returns it.
+     * 
+     * @param array $args 
+     * 
+     * @return  array on success, false on failure
+     */
+    public function getFromCache(array $args)
+    {
+        if (!$this->isCacheable()) {
+            return false;
+        }
+
+        $cache   = $this->getCache();
+        $indexes = $this->_getCacheIndexes();
+
+        foreach ($indexes as $index) {
+            if (!isset($args[$index])) {
+                continue;
+            }
+
+            $key    = $this->getCacheKey($index, $args[$index]);
+            $result = $cache->load($key);
+
+            if ($result !== false) {
+                return unserialize($result);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets an array of cache indexes for use with getCacheKey().  Includes the
+     * primary key, as well as any additional indexes.
+     * 
+     * @see $_additionalCacheIndexes, $_primaryKey
+     * @return array
+     */
+    protected function _getCacheIndexes()
+    {
+        $columns = array_unique(
+            array_merge(
+                $this->_additionalCacheIndexes,
+                array($this->_primaryKey)
+            )
+        );
+
+        return $columns;
+    }
+
+    /**
+     * Removes all cache entries for the current object
+     * 
+     * @return void
+     */
+    public function invalidateCache()
+    {
+        if (!$this->isCacheable()) {
+            return false;
+        }
+
+        $cache   = $this->getCache();
+        $indexes = $this->_getCacheIndexes();
+
+        foreach ($indexes as $index) {
+            $key = $this->getCacheKey($index, $this->_values[$index]);
+            $cache->remove($key);
+        }
+    }
+
+    /**
+     * Stores the current values in all cache indexes
+     * 
+     * @return void
+     */
+    public function updateCache()
+    {
+        if (!$this->isCacheable()) {
+            return false;
+        }
+
+        $cache   = $this->getCache();
+        $indexes = $this->_getCacheIndexes();
+        $data    = serialize($this->_values);
+        foreach ($indexes as $index) {
+            $key = $this->getCacheKey($index, $this->_values[$index]);
+            $cache->save($data, $key);
+        }
+    }
+
+    /**
+     * Helper for creating cache keys (md5) based on the class name,
+     * index name, and index value
+     * 
+     * @param string $index The index name (column)
+     * @param mixed  $value The index value
+     * 
+     * @return string
+     */
+    public function getCacheKey($index, $value)
+    {
+        return md5(get_class($this) . '.' . $index . '.' . $value);
     }
 
     /**
@@ -222,6 +365,7 @@ abstract class Deneb_Object_Common
 
         $args = array($this->_primaryKey => $pkValue);
         $this->_loadFromDB($args, 'write');
+        $this->updateCache();
     }
 
     /**
@@ -238,6 +382,7 @@ abstract class Deneb_Object_Common
 
         $where = "{$this->_primaryKey} = {$this->_values[$this->_primaryKey]}";
         $this->_getWriteDB()->update($this->_table, $this->_values, $where);
+        $this->updateCache();
     }
 
     /**
@@ -262,6 +407,7 @@ abstract class Deneb_Object_Common
         $where  = $this->_primaryKey . ' = ';
         $where .= $this->_values[$this->_primaryKey];
         $this->_getWriteDB()->delete($this->_table, $where);
+        $this->invalidateCache();
     }
 
     /**

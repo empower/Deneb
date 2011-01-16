@@ -1,63 +1,56 @@
 <?php
 /**
- * Deneb_Dummy
- *
- * @uses      Deneb_Object_Common
+ * Deneb_DummyCacheCollection
+ * 
+ * @uses      Deneb_Collection_Common
  * @category  Deneb
  * @package   Deneb
- * @author    Bill Shupp <hostmaster@shupp.org>
+ * @author    Bill Shupp <hostmaster@shupp.org> 
  * @copyright 2010 Empower Campaigns
  * @license   http://www.opensource.org/licenses/bsd-license.php FreeBSD
  * @link      http://github.com/empower/deneb
  */
 
-require_once 'Deneb/Object/Common.php';
+require_once 'Deneb/Collection/Common.php';
 
 /**
- * Dummy model for testing
- *
- * @uses      Deneb_Object_Common
+ * Dummy model collection for testing
+ * 
+ * @uses      Deneb_Collection_Common
  * @category  Deneb
  * @package   Deneb
- * @author    Bill Shupp <hostmaster@shupp.org>
+ * @author    Bill Shupp <hostmaster@shupp.org> 
  * @copyright 2010 Empower Campaigns
  * @license   http://www.opensource.org/licenses/bsd-license.php FreeBSD
  * @link      http://github.com/empower/deneb
  */
-class Deneb_Dummy extends Deneb_Object_Common
+class Deneb_DummyCacheCollection extends Deneb_Collection_Common
 {
     /**
-     * The name of the object for use in exception messages
-     *
+     * The name of the singular object
+     * 
      * @var string
      */
-    protected $_name = 'dummy';
+    protected $_object = 'Deneb_DummyCache';
+
+    /**
+     * The name of the object for use in exception messages
+     * 
+     * @var string
+     */
+    protected $_name = 'dummycache';
 
     /**
      * The table to use in the DB
-     *
+     * 
      * @var string
      */
     protected $_table = 'Dummys';
 
     /**
      * The DB selector
-     *
+     * 
      * @var string
      */
     protected $_selector = 'default';
-
-    /**
-     * _enableDateCreated
-     *
-     * @var bool
-     */
-    protected $_enableDateCreated = true;
-
-    /**
-     * _cacheEnabled
-     *
-     * @var bool
-     */
-    protected $_cacheEnabled = false;
 }
