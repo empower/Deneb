@@ -11,7 +11,15 @@ $packagexml->setOptions(array(
     'simpleoutput'      => true,
     'packagedirectory'  => './',
     'filelistgenerator' => 'file',
-    'ignore'            => array('runTests.php', 'generatePackage.php', 'makedoc.sh', 'phpdoc'),
+    'ignore'            => array(
+        'runTests.php',
+        'generatePackage.php',
+        'makedoc.sh',
+        'phpdoc',
+        'phpunit.xml',
+        'phpunit-bootstrap.php',
+        'coverage'
+    ),
     'dir_roles' => array(
         'tests'     => 'test',
         'examples'  => 'doc'
@@ -25,16 +33,17 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('shupp.github.com/pirum');
-$packagexml->setAPIVersion('0.3.0');
-$packagexml->setReleaseVersion('0.3.0');
+$packagexml->setAPIVersion('0.4.0');
+$packagexml->setReleaseVersion('0.4.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added countAll() method for collections
-* Added delayed fetch (no automatic trip to DB) for collections
+* Added support for creating a record with the primary key value supplied
+* After creation, all values are updated in the current object
+* Updated tests to work with PHPUnit 3.5
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();

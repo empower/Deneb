@@ -1,6 +1,6 @@
 <?php
 
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 require_once 'Deneb/DB/Selector.php';
 require_once 'Zend/Test/DbAdapter.php';
 require_once 'Zend/Application.php';

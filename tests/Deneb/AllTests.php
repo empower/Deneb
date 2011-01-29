@@ -1,6 +1,7 @@
 <?php
 
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/Framework/TestCase.php';
+require_once 'PHPUnit/Framework/TestSuite.php';
 require_once 'Deneb/DummyTest.php';
 require_once 'Deneb/DummyCollectionTest.php';
 require_once 'Deneb/DB/SelectorTest.php';

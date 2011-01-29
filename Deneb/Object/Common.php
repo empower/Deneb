@@ -76,20 +76,35 @@ abstract class Deneb_Object_Common
         $this->_init();
 
         if (!empty($args)) {
-            $where = $this->_determineWhere($args);
-
-            $sql = "SELECT * FROM {$this->_table} $where";
-            $this->getLog()->debug("Object SQL: " . $sql);
-            $this->_results = $this->_getReadDB()->fetchAll($sql);
-            if (!count($this->_results)) {
-                throw new static::$_exceptionNotFoundName(
-                    'No ' . $this->_object . ' found: '
-
-                    . print_r($args, true)
-                );
-            }
-            $this->_values = current($this->_results);
+            $this->_loadFromDB($args);
         }
+    }
+
+    /**
+     * Makes a call to the DB to load data into the object
+     *
+     * @param array  $args The contents of the first constructor argument
+     * @param string $type The read/write type.  Defaults to read.
+     *
+     * @return void
+     */
+    protected function _loadFromDB(array $args, $type = 'read')
+    {
+        $db = ($type == 'write') ? $this->_getWriteDB() : $this->_getReadDB();
+
+        $where = $this->_determineWhere($args);
+
+        $sql = "SELECT * FROM {$this->_table} $where";
+        $this->getLog()->debug("Object SQL: " . $sql);
+        $this->_results = $db->fetchAll($sql);
+        if (!count($this->_results)) {
+            throw new static::$_exceptionNotFoundName(
+                'No ' . $this->_object . ' found: '
+
+                . print_r($args, true)
+            );
+        }
+        $this->_values = current($this->_results);
     }
 
     /**
@@ -190,10 +205,6 @@ abstract class Deneb_Object_Common
             $this->set($args);
         }
 
-        if (isset($this->_values[$this->_primaryKey])) {
-            throw new static::$_exceptionName('Primary key value already set');
-        }
-
         if ($this->_enableDateCreated
             && !isset($this->_values['date_created'])) {
 
@@ -201,8 +212,16 @@ abstract class Deneb_Object_Common
         }
 
         $this->_getWriteDB()->insert($this->_table, $this->_values);
-        $id = $this->_getWriteDB()->lastInsertId();
-        $this->_values[$this->_primaryKey] = $id;
+
+        // Now let's update our local values with what's actually in the row
+        if (!isset($this->_values[$this->_primaryKey])) {
+            $pkValue = $this->_getWriteDB()->lastInsertId();
+        } else {
+            $pkValue = $this->_values[$this->_primaryKey];
+        }
+
+        $args = array($this->_primaryKey => $pkValue);
+        $this->_loadFromDB($args, 'write');
     }
 
     /**

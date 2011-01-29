@@ -95,7 +95,7 @@ class Deneb_DummyCollectionTest extends Deneb_TestCase
         $this->_connectionMock->appendStatementToStack($stmt);
         $this->_object->__construct(array());
         $object = $this->_object->getByPrimaryKey(1);
-        $this->assertType('Deneb_Dummy', $object);
+        $this->assertInstanceOf('Deneb_Dummy', $object);
         $this->assertSame(1, $object->id);
     }
 

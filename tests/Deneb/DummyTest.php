@@ -96,8 +96,10 @@ class Deneb_DummyTest extends Deneb_TestCase
         $email = 'bshupp@empowercampaigns.com';
 
         $stmt1 = Zend_Test_DbStatement::createInsertStatement(1);
-        $this->_connectionMock->appendStatementToStack($stmt1);
         $this->_connectionMock->appendLastInsertIdToStack($id);
+        $stmt2 = Zend_Test_DbStatement::createSelectStatement(array(array('id' => $id, 'username' => $username, 'email' => $email)));
+        $this->_connectionMock->appendStatementToStack($stmt2);
+        $this->_connectionMock->appendStatementToStack($stmt1);
 
         $this->_object->__construct();
         $contents = $this->_object->get();
