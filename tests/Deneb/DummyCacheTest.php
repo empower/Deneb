@@ -10,7 +10,7 @@ class Deneb_DummyCacheTest extends Deneb_TestCase
 
     public function testConstructorWithArgumentsAndCache()
     {
-        $cache = Zend_Cache::factory('Core', 'File', array('cache_prefix' => __METHOD__));
+        $cache = Zend_Cache::factory('Core', 'Mock');
         Deneb::setCache($cache);
 
         $id = 1;
