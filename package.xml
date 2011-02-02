@@ -4,7 +4,7 @@
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
  <name>Deneb</name>
- <channel>shupp.github.com/pirum</channel>
+ <channel>empower.github.com/pirum</channel>
  <summary>Simple CRUD layer for DB based models</summary>
  <description>Deneb provides a consistent CRUD interface to using Zend_Db base models and model collections, as well as segregated read and write DB pools and selectors</description>
  <lead>
@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2011-01-28</date>
- <time>17:05:11</time>
+ <date>2011-02-02</date>
+ <time>12:30:43</time>
  <version>
-  <release>0.4.0</release>
-  <api>0.4.0</api>
+  <release>0.5.0</release>
+  <api>0.5.0</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,9 +25,8 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Added support for creating a record with the primary key value supplied
-* After creation, all values are updated in the current object
-* Updated tests to work with PHPUnit 3.5
+* Added automatic caching
+* Moved to empower pear channel
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -55,11 +54,16 @@
      </dir> <!-- /tests/Deneb/DB -->
      <file name="AllTests.php" role="test" />
      <file name="Dummy.php" role="test" />
+     <file name="DummyCache.php" role="test" />
+     <file name="DummyCacheCollection.php" role="test" />
+     <file name="DummyCacheCollectionTest.php" role="test" />
+     <file name="DummyCacheTest.php" role="test" />
      <file name="DummyCollection.php" role="test" />
      <file name="DummyCollectionTest.php" role="test" />
      <file name="DummyTest.php" role="test" />
      <file name="TestCase.php" role="test" />
     </dir> <!-- /tests/Deneb -->
+    <file name="DenebTest.php" role="test" />
     <file name="FoobarException.php" role="test" />
    </dir> <!-- /tests -->
    <file name="Deneb.php" role="php" />
@@ -77,7 +81,12 @@
    <package>
     <name>Zend</name>
     <channel>zend.googlecode.com/svn</channel>
-    <min>1.10.7</min>
+    <min>1.11.0</min>
+   </package>
+   <package>
+    <name>Zend_Cache_Backend_Mock</name>
+    <channel>empower.github.com/pirum</channel>
+    <min>0.1.0</min>
    </package>
   </required>
  </dependencies>
@@ -144,6 +153,22 @@
 * Added support for creating a record with the primary key value supplied
 * After creation, all values are updated in the current object
 * Updated tests to work with PHPUnit 3.5
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.5.0</release>
+    <api>0.5.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-02-02</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Added automatic caching
+* Moved to empower pear channel
    </notes>
   </release>
  </changelog>

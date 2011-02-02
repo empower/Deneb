@@ -18,7 +18,7 @@ $packagexml->setOptions(array(
         'phpdoc',
         'phpunit.xml',
         'phpunit-bootstrap.php',
-        'coverage'
+        'coverage/'
     ),
     'dir_roles' => array(
         'tests'     => 'test',
@@ -32,18 +32,17 @@ $packagexml->setDescription(
     'Deneb provides a consistent CRUD interface to using Zend_Db base models and model collections, as well as segregated read and write DB pools and selectors'
 );
 
-$packagexml->setChannel('shupp.github.com/pirum');
-$packagexml->setAPIVersion('0.4.0');
-$packagexml->setReleaseVersion('0.4.0');
+$packagexml->setChannel('empower.github.com/pirum');
+$packagexml->setAPIVersion('0.5.0');
+$packagexml->setReleaseVersion('0.5.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added support for creating a record with the primary key value supplied
-* After creation, all values are updated in the current object
-* Updated tests to work with PHPUnit 3.5
+* Added automatic caching
+* Moved to empower pear channel
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
@@ -60,7 +59,8 @@ $packagexml->setLicense('New BSD License',
 
 $packagexml->setPhpDep('5.0.0');
 $packagexml->setPearinstallerDep('1.4.0b1');
-$packagexml->addPackageDepWithChannel('required', 'Zend', 'zend.googlecode.com/svn', '1.10.7');
+$packagexml->addPackageDepWithChannel('required', 'Zend', 'zend.googlecode.com/svn', '1.11.0');
+$packagexml->addPackageDepWithChannel('required', 'Zend_Cache_Backend_Mock', 'empower.github.com/pirum', '0.1.0');
 
 $packagexml->generateContents();
 $packagexml->writePackageFile();
