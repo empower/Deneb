@@ -1,7 +1,7 @@
 Deneb: A simple CRUD layer for Zend_Db based models
 ===================================================
 
-Deneb provides a consistent CRUD interface to using Zend_Db based models and model collections, as well as segregated read and write DB pools and selectors.  Provided are common classes for single objects, as well as collections of objects.
+Deneb provides a consistent CRUD interface to using Zend_Db based models and model collections, as well as segregated read and write DB pools and selectors.  Provided are common classes for single objects, as well as collections of objects.  Other features include attaching Zend_Log and Zend_Cache interfaces.
 
 Here's an example model, Deneb_User:
 
@@ -39,6 +39,24 @@ Here's an example model, Deneb_User:
     ?>
 
 
+And the relevant schema for that Model:
+
+    CREATE TABLE `users` (
+      `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+      `status` TINYINT UNSIGNED NOT NULL default 0,
+      `first_name` VARCHAR(255) NOT NULL,
+      `last_name` VARCHAR(255) NOT NULL,
+      `username` VARCHAR(15) NOT NULL,
+      `password` VARCHAR(255) NOT NULL,
+      `email` VARCHAR(100) NOT NULL,
+      `date_created` DATETIME NOT NULL,
+      `last_modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY  (`id`),
+      UNIQUE KEY `idx_username` (`username`),
+      UNIQUE KEY `idx_email` (`email`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 Single model read example:
 
     $user = new Deneb_User(array('username' => 'shupp'));
@@ -59,7 +77,7 @@ Single model write example:
 Collection model example:
 
     try {
-        $users = new Deneb_UserCollection(array('enabled' => 1));
+        $users = new Deneb_UserCollection(array('status' => 1));
         foreach ($users as $user) {
             echo "Username: $user->username\n";
         }
