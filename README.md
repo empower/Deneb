@@ -30,11 +30,19 @@ Here's an example model, Deneb_User:
         protected $_selector = 'default';
 
         /**
-         * _enableDateCreated
+         * Whether or not to insert NOW() in a date_created field on INSERT
          *
          * @var bool
          */
         protected $_enableDateCreated = true;
+
+        /**
+         * Whether caching should be enabled for this model.
+         * Enabled by default.
+         * 
+         * @var bool
+         */
+        protected $_cacheEnabled = true;
     }
     ?>
 
