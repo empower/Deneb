@@ -102,6 +102,11 @@ abstract class Deneb
     /**
      * The object property values
      *
+     * @see Deneb_Object_Common::__get()
+     * @see Deneb_Object_Common::__set()
+     * @see Deneb_Object_Common::__isset()
+     * @see Deneb_Object_Common::__unset()
+     * @see Deneb_Object_Common::set()
      * @var array
      */
     protected $_values = array();
@@ -153,6 +158,21 @@ abstract class Deneb
     }
     // @codeCoverageIgnoreEnd
 
+    /**
+     * Determines the where clause to use based on the $args argument passed
+     * to __construct(). array('id' => 1) would transform into
+     *
+     * WHERE id=1
+     *
+     * You can also use the form array('id' => array(1,2,3), which would
+     * transform into
+     *
+     * WHERE id IN (1, 2, 3)
+     * 
+     * @param array $args 
+     * 
+     * @return void
+     */
     protected function _determineWhere(array $args)
     {
         $where = '';
