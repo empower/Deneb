@@ -128,7 +128,7 @@ Transparent caching with Zend_Cache:
     Deneb::setCache($cache);
 
 
-Easy to attach logging with via Zend_Log:
+Easy to attach an instance of Zend_Log:
 
     $writer = new Zend_Log_Writer_Stream('/tmp/deneb.log');
     $log    = new Zend_Log($writer);
