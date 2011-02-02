@@ -24,6 +24,9 @@ $packagexml->setOptions(array(
         'tests'     => 'test',
         'examples'  => 'doc'
     ),
+    'exceptions' => array(
+        'README.md' => 'doc',
+    ),
 ));
 
 $packagexml->setPackage('Deneb');
