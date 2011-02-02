@@ -6,7 +6,7 @@ Deneb provides a consistent CRUD interface to using Zend_Db based models and mod
 Here's an example model, Deneb_User:
 
     <?php
-    class Deneb_User extends Deneb_Object_Common
+    class Model_User extends Deneb_Object_Common
     {
         /**
          * The name of the object for use in exception messages
@@ -59,12 +59,12 @@ And the relevant schema for that Model:
 
 Single model read example:
 
-    $user = new Deneb_User(array('username' => 'shupp'));
+    $user = new Model_User(array('username' => 'shupp'));
 
 
 Single model write example:
 
-    $user           = new Deneb_User();
+    $user           = new Model_User();
     $user->username = 'shupp';
     $user->email    = 'bshupp@empowercampaigns.com';
     try {
@@ -74,10 +74,46 @@ Single model write example:
     }
 
 
+Here's an example model collection:
+
+    <?php
+    class Model_UserCollection extends Deneb_Collection_Common
+    {
+        /**
+         * The name of the singular object
+         * 
+         * @var string
+         */
+        protected $_object = 'Model_Dummy';
+
+        /**
+         * The name of the object for use in exception messages
+         * 
+         * @var string
+         */
+        protected $_name = 'dummy';
+
+        /**
+         * The table to use in the DB
+         * 
+         * @var string
+         */
+        protected $_table = 'users';
+
+        /**
+         * The DB selector
+         * 
+         * @var string
+         */
+        protected $_selector = 'default';
+    }
+    ?>
+
+
 Collection model example:
 
     try {
-        $users = new Deneb_UserCollection(array('status' => 1));
+        $users = new Model_UserCollection(array('status' => 1));
         foreach ($users as $user) {
             echo "Username: $user->username\n";
         }
