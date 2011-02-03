@@ -92,14 +92,14 @@ Here's an example model collection:
          * 
          * @var string
          */
-        protected $_object = 'Model_Dummy';
+        protected $_object = 'Model_User';
 
         /**
          * The name of the object for use in exception messages
          * 
          * @var string
          */
-        protected $_name = 'dummy';
+        protected $_name = 'user';
 
         /**
          * The table to use in the DB
