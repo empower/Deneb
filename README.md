@@ -3,7 +3,7 @@ Deneb: A simple CRUD layer for Zend_Db based models
 
 Deneb provides a consistent CRUD interface to using Zend_Db based models and model collections, as well as segregated read and write DB pools and selectors.  Provided are common classes for single objects, as well as collections of objects.  Other features include attaching Zend_Log and Zend_Cache interfaces.
 
-Here's an example model, Deneb_User:
+Here's an example model, Model_User:
 
     <?php
     class Model_User extends Deneb_Object_Common
