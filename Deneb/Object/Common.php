@@ -51,17 +51,24 @@ abstract class Deneb_Object_Common
 
     /**
      * A list of additional columns to cache an object by
-     * 
+     *
      * @var array
      */
     protected $_additionalCacheIndexes = array();
 
     /**
      * Whether caching should be enabled for this object
-     * 
+     *
      * @var bool
      */
     protected $_cacheEnabled = true;
+
+    /**
+     * Array of field names for which values should not be returned by get()
+     *
+     * @var array
+     */
+    protected $_protectedFields = array();
 
     /**
      * Calls {@link _init()} and sets the values of arguments were passed
@@ -133,7 +140,7 @@ abstract class Deneb_Object_Common
 
     /**
      * Allows external checking of whether caching can be used
-     * 
+     *
      * @return bool
      */
     public function isCacheable()
@@ -147,9 +154,9 @@ abstract class Deneb_Object_Common
 
     /**
      * Gets object data from the cache and returns it.
-     * 
-     * @param array $args 
-     * 
+     *
+     * @param array $args
+     *
      * @return  array on success, false on failure
      */
     public function getFromCache(array $args)
@@ -180,7 +187,7 @@ abstract class Deneb_Object_Common
     /**
      * Gets an array of cache indexes for use with getCacheKey().  Includes the
      * primary key, as well as any additional indexes.
-     * 
+     *
      * @see $_additionalCacheIndexes, $_primaryKey
      * @return array
      */
@@ -198,7 +205,7 @@ abstract class Deneb_Object_Common
 
     /**
      * Removes all cache entries for the current object
-     * 
+     *
      * @return void
      */
     public function invalidateCache()
@@ -218,7 +225,7 @@ abstract class Deneb_Object_Common
 
     /**
      * Stores the current values in all cache indexes
-     * 
+     *
      * @return void
      */
     public function updateCache()
@@ -239,10 +246,10 @@ abstract class Deneb_Object_Common
     /**
      * Helper for creating cache keys (md5) based on the class name,
      * index name, and index value
-     * 
+     *
      * @param string $index The index name (column)
      * @param mixed  $value The index value
-     * 
+     *
      * @return string
      */
     public function getCacheKey($index, $value)
@@ -332,7 +339,11 @@ abstract class Deneb_Object_Common
      */
     public function get()
     {
-        return $this->_values;
+        $values = $this->_values;
+        foreach ($this->_protectedFields as $name) {
+            unset($values[$name]);
+        }
+        return $values;
     }
 
     /**

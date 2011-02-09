@@ -89,6 +89,25 @@ class Deneb_DummyTest extends Deneb_TestCase
         $this->assertSame($newContents, $this->_object->get());
     }
 
+    public function testSetGetProtectedFields()
+    {
+        $contents = $this->_object->get();
+        $this->assertTrue(empty($contents));
+
+        $newContents = array(
+            'id' => 1,
+            'username' => 'shupp',
+            'protected_field' => 'bshupp@empowercampaigns.com',
+        );
+
+        $this->_object->set($newContents);
+        unset($newContents['protected_field']);
+        $this->assertSame($newContents, $this->_object->get());
+
+        $this->_object->set($newContents);
+        $this->assertSame($newContents, $this->_object->get());
+    }
+
     public function testCreate()
     {
         $id = 1;

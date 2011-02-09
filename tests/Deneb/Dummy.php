@@ -60,4 +60,11 @@ class Deneb_Dummy extends Deneb_Object_Common
      * @var bool
      */
     protected $_cacheEnabled = false;
+
+    /**
+     * Array of field names for which values should not be returned by get()
+     *
+     * @var array
+     */
+    protected $_protectedFields = array('protected_field');
 }
