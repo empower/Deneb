@@ -19,7 +19,7 @@ require_once 'Deneb.php';
 require_once 'Deneb/Object/Interface.php';
 
 /**
- * Implementation of single object Denebs.
+ * Implementation of single objects.
  *
  * @uses      Deneb
  * @uses      Deneb_Object_Interface
@@ -43,7 +43,7 @@ abstract class Deneb_Object_Common
 
     /**
      * Whether to automatically populate a date_created column with the
-     * current timestamp.  Defaults to false
+     * current datetime value.  Defaults to false.
      *
      * @var bool
      */
@@ -64,32 +64,47 @@ abstract class Deneb_Object_Common
     protected $_cacheEnabled = true;
 
     /**
-     * Array of field names for which values should not be returned by get()
+     * Array of field names for which values should not be returned by
+     * {@link Deneb_Object_Common::get()}
      *
      * @var array
      */
     protected $_protectedFields = array();
 
     /**
-     * Calls {@link _init()} and sets the values of arguments were passed
+     * If no $args argument is passed, an empty object is created.  If the
+     * $args argument is passed, the object is looked up optionally in the
+     * cache first, and then the data store.  If a lookup is performed and no
+     * object is found, a {@link Deneb_Exception_NotFound} exception is thrown.
+     *
+     * Below is an example where Model_User extends {@link Deneb_Object_Common}:
      *
      * Read example:
      * <code>
-     * $user = new Deneb_User(array('username' => 'shupp'));
+     * try {
+     *     $user = new Model_User(array('username' => 'shupp'));
+     * } catch (Deneb_Exception_NotFound $e) {
+     *     echo "Sorry, could not find user with username 'shupp'";
+     * }
      * </code>
      *
      *
      * Create example:
      * <code>
-     * $user = new Deneb_User();
+     * $user = new Model_User();
      * $user->username = 'shupp';
      * $user->email = 'bshupp@empowercampaigns.com';
-     * $user->create();
+     * try {
+     *     $user->create();
+     * } catch (Deneb_Exception $e) {
+     *    echo "Unable to create new user: " . $e->getMessage();
+     * }
      * </code>
      *
-     * @param array $args Arguments to used in a "where clause"
+     * @param array $args Arguments to used in a "where clause".  Leave empty
+     *                    when creating a new object
      *
-     * @return void
+     * @return Deneb_Object_Common
      * @throws Deneb_Exception_NotFound on lookup failure
      */
     public function __construct(array $args = array())
@@ -185,8 +200,9 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Gets an array of cache indexes for use with getCacheKey().  Includes the
-     * primary key, as well as any additional indexes.
+     * Gets an array of cache indexes for use with
+     * {@link Deneb_Object_Common::getCacheKey()}.  Includes the primary key,
+     * as well as any additional indexes.
      *
      * @see $_additionalCacheIndexes, $_primaryKey
      * @return array
@@ -258,13 +274,14 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Magic __get() method implementation.  Allows for easy property access
+     * Magic {@link Deneb_Object_Interface::__get()} method implementation.
+     * Allows for easy property access.
      *
      * <code>
      * $username = $user->username;
      * </code>
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return mixed|null
      */
@@ -277,8 +294,8 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Magic __set() method implementation.  Allows for easy property value
-     * assignment
+     * Magic {@link Deneb_Object_Interface::__set()} method implementation.
+     * Allows for easy property value assignment.
      *
      * <code>
      * $user->username = 'shupp';
@@ -295,8 +312,8 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Magic __unset () method implementation.  Allows for easily unsetting
-     * property values.
+     * Magic {@link Deneb_Object_Interface::__unset()} method implementation.
+     * Allows for easily unsetting property values.
      *
      * @param string $name The property value to unset
      *
@@ -308,8 +325,8 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Magic __isset() method implementation.  Allows for easy checking
-     * whether a value is set or not
+     * Magic {@link Deneb_Object_Interface::__isset()} method implementation.
+     * Allows for easy checking whether a value is set or not.
      *
      * @param string $name The property name to check
      *
@@ -325,6 +342,7 @@ abstract class Deneb_Object_Common
      *
      * @param array $values Associative array of property/values
      *
+     * @see $_values
      * @return void
      */
     public function set(array $values)
@@ -333,7 +351,10 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Gets the current property values of an object as an associative array
+     * Gets the current property values of an object as an associative array,
+     * omitting anything listed in
+     * {@link Deneb_Object_Common::$_protectedFields}.  This is useful for
+     * making values available to a view.
      *
      * @return array
      */
@@ -347,10 +368,16 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Creates an object in the data store.
+     * Creates an object in the data store.  If a cache is being used, it will
+     * be updated.  The current objects values will be updated with a follow up
+     * read from the data store, as this insures that any auto-generated values
+     * are populated in this object instance.
      *
-     * @param array $args
+     * @param array $args Optional set of values to use, overrides any values
+     *                    already set
      *
+     * @see $_values, set()
+     * @throws Deneb_Exception on insert failure
      * @return void
      */
     public function create(array $args = array())
@@ -380,10 +407,11 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Stores any changes to an object in the data store
+     * Stores any changes to an object in the data store.  If a cache is used,
+     * it gets updated.
      *
-     * @return void
      * @throws Deneb_Exception on failure
+     * @return void
      */
     public function update()
     {
@@ -397,7 +425,8 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Deletes an object form the data store
+     * Deletes an object form the data store.  If a cache is used, the cache
+     * is invalidated.
      *
      * @param mixed $id Optional primary key value to use instead of the
      *                  current object's value. Used when you don't want to
@@ -422,7 +451,7 @@ abstract class Deneb_Object_Common
     }
 
     /**
-     * Returns {@see $_primaryKey}
+     * Returns {@link Deneb_Object_Common::$_primaryKey}
      *
      * @return string
      */

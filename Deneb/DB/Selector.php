@@ -1,20 +1,20 @@
 <?php
 /**
- * Deneb_DB_Selector 
- * 
+ * Deneb_DB_Selector
+ *
  * PHP Version 5.3.2+
- * 
+ *
  * @category   Deneb
  * @package    Deneb
  * @subpackage DB
- * @author     Bill Shupp <hostmaster@shupp.org> 
+ * @author     Bill Shupp <hostmaster@shupp.org>
  * @copyright  2010 Empower Campaigns
  * @link       http://github.com/empower/deneb
  * @license    http://www.opensource.org/licenses/bsd-license.php FreeBSD
  */
 
 /**
- * Required files 
+ * Required files
  */
 require_once 'Deneb/DB/Exception.php';
 require_once 'Zend/Db.php';
@@ -22,7 +22,7 @@ require_once 'Zend/Db.php';
 /**
  * A light loader for DB connections based on the ZF config.
  * Here's an example application.ini section
- * 
+ *
  * <code>
  *  db.selectors.user = "default"
  *  db.adapter = 'PDO_MYSQL'
@@ -37,25 +37,25 @@ require_once 'Zend/Db.php';
  *  db.pools.default.read.port = "3306"
  *  db.pools.default.read.dbname = "production"
  * </code>
- * 
+ *
  * And here's example usage:
- * 
+ *
  * <code>
  *  $application = new Zend_Application(
  *      APPLICATION_ENV,
  *      APPLICATION_PATH . '/configs/application.ini'
  *  );
  *  $application->bootstrap();
- * 
+ *
  *  $selector = new Deneb_DB_Selector($application, 'user');
  *  $readDB   = $selector->getReadInstance();
  *  $writeDB  = $selector->getWriteInstance();
  * </code>
- * 
+ *
  * @category   Deneb
  * @package    Deneb
  * @subpackage DB
- * @author     Bill Shupp <hostmaster@shupp.org> 
+ * @author     Bill Shupp <hostmaster@shupp.org>
  * @copyright  2010 Empower Campaigns
  * @link       http://github.com/empower/deneb
  * @license    http://www.opensource.org/licenses/bsd-license.php FreeBSD
@@ -64,21 +64,21 @@ class Deneb_DB_Selector
 {
     /**
      * The db.* portion of the application config as an array
-     * 
+     *
      * @var array
      */
     protected $_dbConfig = null;
 
     /**
      * The pool that the selector points to
-     * 
+     *
      * @var string
      */
     protected $_pool = null;
 
     /**
      * A static array of Zend_Db_Adapter instances
-     * 
+     *
      * @var array
      */
     static protected $_instances = array();
@@ -96,7 +96,7 @@ class Deneb_DB_Selector
 
     /**
      * Returns a Zend_Db_Adapter for the 'read' pool of a selector
-     * 
+     *
      * @see getInstance()
      * @return Zend_Db_Adapter
      */
@@ -107,7 +107,7 @@ class Deneb_DB_Selector
 
     /**
      * Returns a Zend_Db_Adapter for the 'write' pool of a selector
-     * 
+     *
      * @see getInstance()
      * @return Zend_Db_Adapter
      */
@@ -118,9 +118,9 @@ class Deneb_DB_Selector
 
     /**
      * Returns a Zend_Db_Adapter instance based on a selector.
-     * 
+     *
      * @param string $type read or write
-     * 
+     *
      * @return Zend_Db_Adapter
      */
     protected function getInstance($type)
@@ -141,9 +141,9 @@ class Deneb_DB_Selector
     // @codeCoverageIgnoreStart
     /**
      * Creates a Zend_Db_Adapter instance. Abstracted for testing.
-     * 
+     *
      * @param string $type read or write
-     * 
+     *
      * @return Zend_Db_Adapter_Pdo
      */
     protected function _createInstance($type)

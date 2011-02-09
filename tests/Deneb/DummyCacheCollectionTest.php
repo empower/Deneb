@@ -34,7 +34,7 @@ class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
         );
 
         $dummyCache->updateCache();
-        
+
         $rows = array(
             array(
                 'id' => 1,

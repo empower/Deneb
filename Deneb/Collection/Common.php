@@ -49,33 +49,34 @@ implements Iterator, Countable
     protected $_position = 0;
 
     /**
-     * Array of single object instances
+     * Array of single object instances, in the order which they came back
+     * from the DB
      *
      * @var array
      */
     protected $_collection = array();
 
     /**
-     * Array of single object instances, indexed by primary key
+     * Array of single object instances, indexed by primary key value
      *
      * @var array
      */
     protected $_collectionByPrimaryKey = array();
 
     /**
-     * Options passed to the constructor, used in later calls
+     * Options passed to the constructor, used in multiple methods
      * @var array
      */
     protected $_options = array();
 
     /**
-     * Sets parameters and options for collection inclusion, then optionally talks to
-     *   the data store and instantiates the objects
+     * Sets where parameters and options for collection inclusion, then optionally
+     * talks to the data store and instantiates the objects
      *
      * @param array $args    The key/values that can be used in a where clause
      * @param array $options Optional limits, offset, order, group, having, fetch
      *
-     * @return void
+     * @return Deneb_Collection_Common
      */
     public function __construct(array $args, array $options = array())
     {
@@ -90,9 +91,10 @@ implements Iterator, Countable
     }
 
     /**
-     * Fetch collection objects - usually done by constuctor, but not if
-     *   options['fetch'] = false
+     * Fetches collection objects - usually called by constuctor, but not if
+     * options['fetch'] = false
      *
+     * @see _fetchFromCacheOrDB(), _fetchFromDB()
      * @return null
      */
     public function fetch()
@@ -112,14 +114,16 @@ implements Iterator, Countable
 
     /**
      * Looks up the matching IDs for this collection, and then tries to populate
-     * $_results from the cache first.  Any misses are gotten from the DB.
-     * 
+     * {@link Deneb::$_results} from the cache first.  Any
+     * misses are gotten from the DB.
+     *
      * @param string              $where  The where clause as determined
      *                                    by _determineWhere()
      * @param string              $limits The limits clause as determined
      *                                    by _determineLimits()
      * @param Model_Object_Common $object An instance of the object for cache access
-     * 
+     *
+     * @see $_results, fetch(), _loadObjects()
      * @throws Model_Exception_NotFound on empty results
      * @return void
      */
@@ -211,11 +215,12 @@ implements Iterator, Countable
     }
 
     /**
-     * Fetches results from the DB
-     * 
+     * Fetches results from the DB directly
+     *
      * @param string $where  The where clause as determined by _determineWhere()
      * @param string $limits The limits clause as determined by _determineLimits()
-     * 
+     *
+     * @see fetch(), $_results, _loadObjects()
      * @throws Model_Exception_NotFound on empty results
      * @return void
      */
@@ -234,10 +239,11 @@ implements Iterator, Countable
 
     /**
      * Takes an array of results and loads it up into Deneb_Object_Common
-     * instances, stored in {$this->_collection}
-     * 
+     * instances, stored in {@link Deneb_Collection_Common::$_collection}
+     *
      * @param array $results The results from fetchAll()
-     * 
+     *
+     * @see _loadObject()
      * @return void
      */
     protected function _loadObjects(array $results)
@@ -250,9 +256,9 @@ implements Iterator, Countable
     /**
      * Instantiates an object from a query result, assigns it to
      * $_collectionByPrimaryKey, and returns it
-     * 
+     *
      * @param array $result The row result from the DB or Cache
-     * 
+     *
      * @return Deneb_Object_Common
      */
     protected function _loadObject(array $result)
@@ -283,7 +289,7 @@ implements Iterator, Countable
     }
 
     /**
-     * Returns an array of the primary keys
+     * Returns an array of the primary key values in this result set
      *
      * @return array
      */
@@ -294,7 +300,7 @@ implements Iterator, Countable
 
     /**
      * Returns the total number of objects that would be returned under the specified
-     *   conditions (ignoring options)
+     * conditions (ignoring options)
      *
      * @return int
      */
@@ -320,8 +326,8 @@ implements Iterator, Countable
     /**
      * Returns the current collection object
      *
-     * @return Deneb_Object_Common
      * @see Iterator
+     * @return Deneb_Object_Common
      */
     public function current()
     {
@@ -331,8 +337,8 @@ implements Iterator, Countable
     /**
      * Returns the numeric position
      *
-     * @return int
      * @see Iterator
+     * @return int
      */
     public function key()
     {
@@ -342,8 +348,8 @@ implements Iterator, Countable
     /**
      * Increments the position
      *
-     * @return void
      * @see Iterator
+     * @return void
      */
     public function next()
     {
@@ -351,10 +357,11 @@ implements Iterator, Countable
     }
 
     /**
-     * Validates whether the current {$_position} exists
+     * Validates whether the current {@link Deneb_Collection_Common::$_position}
+     * exists
      *
-     * @return bool
      * @see Iterator
+     * @return bool
      */
     public function valid()
     {
@@ -364,6 +371,7 @@ implements Iterator, Countable
     /**
      * Implements the Countable interface
      *
+     * @see Countable
      * @return int
      */
     public function count()

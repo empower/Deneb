@@ -18,8 +18,9 @@ require_once 'Deneb/Exception/NotFound.php';
 require_once 'Deneb/DB/Selector.php';
 
 /**
- * Defines common implementations of methods and properties for
- * {@link Deneb_Object_Common} and {@link Deneb_Collection_Common}
+ * Implements methods and properties common to both
+ * {@link Deneb_Object_Common} and {@link Deneb_Collection_Common}.  Also a
+ * placeholder for {@link Zend_Cache} and {@link Zend_Log} instances if used.
  *
  * @category  Deneb
  * @package   Deneb
@@ -31,48 +32,54 @@ require_once 'Deneb/DB/Selector.php';
 abstract class Deneb
 {
     /**
-     * Instance of Zend_Application, providing access to the config and
+     * Instance of {@link Zend_Application}, providing access to the config and
      * log instances
+     *
+     * @see Zend_Application
      */
     static protected $_application = null;
 
     /**
-     * Name of the general deneb exception to throw
+     * Name of the base deneb exception to throw.  Use this if you don't
+     * want to use Deneb_Exception.  (Useful if you are migrating to Deneb
+     * after other exceptions have been used).
      *
      * @see setExceptionName()
      */
     static protected $_exceptionName = 'Deneb_Exception';
 
     /**
-     * Name of the not found deneb exception to throw
+     * Name of the "not found" deneb exception to throw.  Use this if you don't
+     * want to use Deneb_Exception_NotFound.  (Useful if you are migrating to
+     * Deneb after other exceptions have been used).
      *
      * @see setExceptionName()
      */
     static protected $_exceptionNotFoundName = 'Deneb_Exception_NotFound';
 
     /**
-     * Instance of Zend_Log
+     * Instance of {@link Zend_Log}
      *
-     * @see getLog()
+     * @see getLog(), setLog()
      */
     static protected $_log = null;
 
     /**
-     * Instance of Zend_Cache
+     * Instance of {@link Zend_Cache}
      *
-     * @see getCache()
+     * @see getCache(), setCache()
      */
     static protected $_cache = null;
 
     /**
-     * The read instance of Zend_Db_Adapter
+     * The read instance of {@link Zend_Db_Adapter}
      *
      * @var Zend_Db_Adapter
      */
     protected $_readDB = null;
 
     /**
-     * The write instance of Zend_Db_Adapter
+     * The write instance of {@link Zend_Db_Adapter}
      *
      * @var Zend_Db_Adapter
      */
@@ -119,7 +126,7 @@ abstract class Deneb
     protected $_results = array();
 
     /**
-     * Instance of Deneb_DB_Selector
+     * Instance of {@link Deneb_DB_Selector}
      *
      * @var Deneb_DB_Selector
      * @see getReadDB(), getWriteDB()
@@ -135,7 +142,7 @@ abstract class Deneb
     protected $_args = array();
 
     /**
-     * Loads up the read and write Zend_Db_Adapter objects
+     * Loads up the read and write {@link Zend_Db_Adapter} objects
      *
      * @return void
      */
@@ -146,7 +153,7 @@ abstract class Deneb
 
     // @codeCoverageIgnoreStart
     /**
-     * Creates an instance of Deneb_DB_Selector.  Abstracted for testing.
+     * Creates an instance of {@link Deneb_DB_Selector}.  Abstracted for testing.
      *
      * @return Deneb_DB_Selector
      */
@@ -168,10 +175,10 @@ abstract class Deneb
      * transform into
      *
      * WHERE id IN (1, 2, 3)
-     * 
-     * @param array $args 
-     * 
-     * @return void
+     *
+     * @param array $args
+     *
+     * @return string
      */
     protected function _determineWhere(array $args)
     {
@@ -208,8 +215,8 @@ abstract class Deneb
      *
      * @param string $value The element value to quote
      *
-     * @return string
      * @see array_map(), _determineWhere()
+     * @return string
      */
     public function quoteArrayContents($value)
     {
@@ -256,7 +263,7 @@ abstract class Deneb
     }
 
     /**
-     * Returns the {@link $_readDB}.  Abstracted for testing.
+     * Returns {@link Deneb::$_readDB}.  Abstracted for testing.
      *
      * @return Zend_Db_Adapter
      */
@@ -269,7 +276,7 @@ abstract class Deneb
     }
 
     /**
-     * Returns the {@link $_writeDB}.  Abstracted for testing.
+     * Returns {@link Deneb::$_writeDB}.  Abstracted for testing.
      *
      * @return Zend_Db_Adapter
      */
@@ -296,7 +303,7 @@ abstract class Deneb
     }
 
     /**
-     * Sets a custom instance of Zend_Log
+     * Sets a custom instance of {@link Zend_Log}
      *
      * @param Zend_Log $log The logger instance
      *
@@ -308,7 +315,7 @@ abstract class Deneb
     }
 
     /**
-     * Sets a local reference to your Zend_Application
+     * Sets a local reference to your {@link Zend_Application}
      *
      * @param Zend_Application $application The Zend_Application instance
      *
@@ -320,7 +327,7 @@ abstract class Deneb
     }
 
     /**
-     * Returns the local reference to the Zend_Application instance
+     * Returns the local reference to the {@link Zend_Application} instance
      *
      * @return Zend_Application
      */
@@ -353,10 +360,10 @@ abstract class Deneb
     }
 
     /**
-     * Sets an instance of Zend_Cache to use
-     * 
+     * Sets an instance of {@link Zend_Cache} to use
+     *
      * @param Zend_Cache $cache The Zend_Cache instance
-     * 
+     *
      * @return void
      */
     static public function setCache($cache)
@@ -365,8 +372,8 @@ abstract class Deneb
     }
 
     /**
-     * Gets the Zend_Cache instance
-     * 
+     * Gets the {@link Zend_Cache} instance
+     *
      * @return Zend_Cache|null
      */
     public function getCache()
