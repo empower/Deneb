@@ -130,7 +130,7 @@ implements Iterator, Countable
         // See if we can skip the ID lookup
 
         if (count($this->_args) === 1      // Only one element in args
-            && empty($this->options)       // No options are being used
+            && empty($this->_options)      // No options are being used
             && isset($this->_args[$pk])    // That arg is the primary key
             && is_array($this->_args[$pk]) // Its value is an array
             && count($this->_args[$pk])) { // The array is not empty
