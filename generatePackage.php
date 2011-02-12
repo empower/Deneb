@@ -36,16 +36,20 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.5.0');
-$packagexml->setReleaseVersion('0.5.0');
+$packagexml->setAPIVersion('0.6.0');
+$packagexml->setReleaseVersion('0.6.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added automatic caching
-* Moved to empower pear channel
+* Removed all trailing whitespace
+* Updated doc blocks
+* Updated Deneb_Object_Interface to include __unset(), __isset(), and get()
+* Fixed incorrect reference to options in Deneb_Collection_Common
+* Added protected fields - fields not returned by get()
+* Update README.md
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
