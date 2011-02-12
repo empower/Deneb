@@ -88,4 +88,30 @@ interface Deneb_Object_Interface
      * @return mixed|null
      */
     public function __get($name);
+
+    /**
+     * Unsets a property
+     *
+     * @param string $name The name of the property to unset
+     *
+     * @return void
+     */
+    public function __unset($name);
+
+    /**
+     * Determines if a property's value is set
+     *
+     * @param string $name The name of the property to set
+     *
+     * @return bool
+     */
+    public function __isset($name);
+
+    /**
+     * Returns all current object values as an associative array.  Useful for
+     * passing to a view.
+     *
+     * @return array
+     */
+    public function get();
 }
