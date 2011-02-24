@@ -72,6 +72,26 @@ abstract class Deneb_Object_Common
     protected $_protectedFields = array();
 
     /**
+     * Array of valid status values for
+     * {@link Deneb_Object_Common::setStatus()} /
+     * {@link Deneb_Object_Common::hasStatus()}
+     *
+     * These should be constants defined in the child class with values
+     *   1, 2, 4, 8, 16...  order in this array is not important
+     *
+     * @var array
+     */
+    protected $_validStatuses = array();
+
+    /**
+     * Whether the object should have only one status at a time (actually, makes
+     * {@link Deneb_Object_Common::setStatus()} clear before adding a status)
+     *
+     * @var boolean
+     */
+    protected $_enforceSingleStatus = false;
+
+    /**
      * If no $args argument is passed, an empty object is created.  If the
      * $args argument is passed, the object is looked up optionally in the
      * cache first, and then the data store.  If a lookup is performed and no
@@ -271,6 +291,56 @@ abstract class Deneb_Object_Common
     public function getCacheKey($index, $value)
     {
         return md5(get_class($this) . '.' . $index . '.' . $value);
+    }
+
+    /**
+     * Checks to see whether a given status bit has been set
+     *
+     * @param int $bit The bit flag to check
+     *
+     * @return bool
+     */
+    public function hasStatus($bit)
+    {
+        return (bool) ($this->status & (int)$bit);
+    }
+
+    /**
+     * Enables a specific status bit
+     *
+     * @param int $bit The bit to enable
+     *
+     * @return Deneb_Object_Common
+     * @throws Deneb_Exception for an invalid bit
+     */
+    public function setStatus($bit)
+    {
+        if (!in_array($bit, $this->_validStatuses, true)) {
+            throw new static::$_exceptionName('Invalid status bit: ' . $bit);
+        }
+        if ($this->_enforceSingleStatus) {
+            $this->status = $bit;
+        } else {
+            $this->status = ($this->status | $bit);
+        }
+        return $this;
+    }
+
+    /**
+     * Unsets a status bit
+     *
+     * @param int $bit The bit to disable
+     *
+     * @return Deneb_Object_Common
+     * @throws Deneb_Exception for an invalid bit
+     */
+    public function unsetStatus($bit)
+    {
+        if (!in_array($bit, $this->_validStatuses, true)) {
+            throw new static::$_exceptionName('Invalid status bit: ' . $bit);
+        }
+        $this->status = ($this->status & ~$bit);
+        return $this;
     }
 
     /**

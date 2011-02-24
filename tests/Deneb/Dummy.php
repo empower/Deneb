@@ -67,4 +67,30 @@ class Deneb_Dummy extends Deneb_Object_Common
      * @var array
      */
     protected $_protectedFields = array('protected_field');
+
+    const STATUS_ONE   = 1;
+    const STATUS_TWO   = 2;
+    const STATUS_THREE = 4;
+
+    /**
+     * Array of valid status values for
+     * {@link Deneb_Object_Common::setStatus()} /
+     * {@link Deneb_Object_Common::hasStatus()}
+     *
+     * These should be constants defined in the child class with values
+     *   1, 2, 4, 8, 16...  order in this array is not important
+     *
+     * @var array
+     */
+    protected $_validStatuses = array(
+        self::STATUS_ONE, self::STATUS_TWO, self::STATUS_THREE
+    );
+
+    /**
+     * Whether the object should have only one status at a time (actually, makes
+     * {@link Deneb_Object_Common::setStatus()} clear before adding a status)
+     *
+     * @var boolean
+     */
+    public $_enforceSingleStatus = false;
 }

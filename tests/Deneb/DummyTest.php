@@ -251,4 +251,47 @@ class Deneb_DummyTest extends Deneb_TestCase
         $this->_object->__construct();
         $this->assertSame($logger, $this->_object->getLog());
     }
+
+    public function testSetStatusHasStatusUnsetStatus()
+    {
+        $this->_object->__construct();
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->_object->setStatus(Deneb_Dummy::STATUS_ONE);
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->_object->setStatus(Deneb_Dummy::STATUS_THREE);
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_THREE));
+        $this->_object->unsetStatus(Deneb_Dummy::STATUS_ONE);
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_THREE));
+    }
+
+    public function testSetStatusEnforceSingleStatus()
+    {
+        $this->_object->__construct();
+        $this->_object->_enforceSingleStatus = true;
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->_object->setStatus(Deneb_Dummy::STATUS_ONE);
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->_object->setStatus(Deneb_Dummy::STATUS_THREE);
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->assertTrue($this->_object->hasStatus(Deneb_Dummy::STATUS_THREE));
+        $this->_object->unsetStatus(Deneb_Dummy::STATUS_THREE);
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_ONE));
+        $this->assertFalse($this->_object->hasStatus(Deneb_Dummy::STATUS_THREE));
+    }
+
+    public function testSetStatusFailure()
+    {
+        $this->setExpectedException('Deneb_Exception');
+        $this->_object->__construct();
+        $this->_object->setStatus('foobar');
+    }
+
+    public function testUnsetStatusFailure()
+    {
+        $this->setExpectedException('Deneb_Exception');
+        $this->_object->__construct();
+        $this->_object->unsetStatus('foobar');
+    }
 }
