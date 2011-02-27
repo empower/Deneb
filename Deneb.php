@@ -176,7 +176,7 @@ abstract class Deneb
      *
      * WHERE id IN (1, 2, 3)
      *
-     * @param array $args
+     * @param array  $args The args passed in
      *
      * @return string
      */
@@ -184,6 +184,8 @@ abstract class Deneb
     {
         $where = '';
         foreach ($args as $key => $value) {
+            $key = '`' . $this->_table . '`.' . $key;
+
             if ($where != '') {
                 $where .= ' AND';
             }
