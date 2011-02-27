@@ -17,7 +17,7 @@ $packagexml->setOptions(array(
         'runTests.php',
         'generatePackage.php',
         'makedoc.sh',
-        'phpdoc',
+        'phpdoc/',
         'phpunit.xml',
         'phpunit-bootstrap.php',
         'coverage/'
@@ -38,20 +38,16 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.6.0');
-$packagexml->setReleaseVersion('0.6.0');
+$packagexml->setAPIVersion('0.6.1');
+$packagexml->setReleaseVersion('0.6.1');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Removed all trailing whitespace
-* Updated doc blocks
-* Updated Deneb_Object_Interface to include __unset(), __isset(), and get()
-* Fixed incorrect reference to options in Deneb_Collection_Common
-* Added protected fields - fields not returned by get()
-* Update README.md
+* Added support for status bitfield columns, including helpers
+* Added table name prefix to where clause creation
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
