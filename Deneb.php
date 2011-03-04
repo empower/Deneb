@@ -107,18 +107,6 @@ abstract class Deneb
     protected $_object = null;
 
     /**
-     * The object property values
-     *
-     * @see Deneb_Object_Common::__get()
-     * @see Deneb_Object_Common::__set()
-     * @see Deneb_Object_Common::__isset()
-     * @see Deneb_Object_Common::__unset()
-     * @see Deneb_Object_Common::set()
-     * @var array
-     */
-    protected $_values = array();
-
-    /**
      * The query results
      *
      * @var array

@@ -92,6 +92,29 @@ abstract class Deneb_Object_Common
     protected $_enforceSingleStatus = false;
 
     /**
+     * The object property values
+     *
+     * @see Deneb_Object_Common::__get()
+     * @see Deneb_Object_Common::__set()
+     * @see Deneb_Object_Common::__isset()
+     * @see Deneb_Object_Common::__unset()
+     * @see Deneb_Object_Common::set()
+     * @var array
+     */
+    protected $_values = array();
+
+    /**
+     * Names of object properties that have been modified since loading - only those
+     *   fields will be written to the database by update()
+     *
+     * Actually, the property names are KEYS in the array
+     *
+     * @see Deneb_Object_Common::update()
+     * @var array
+     */
+    protected $_propertiesModified = array();
+
+    /**
      * If no $args argument is passed, an empty object is created.  If the
      * $args argument is passed, the object is looked up optionally in the
      * cache first, and then the data store.  If a lookup is performed and no
@@ -379,6 +402,7 @@ abstract class Deneb_Object_Common
     public function __set($name, $value)
     {
         $this->_values[$name] = $value;
+        $this->_propertiesModified[$name] = true;
     }
 
     /**
@@ -392,6 +416,7 @@ abstract class Deneb_Object_Common
     public function __unset($name)
     {
         unset($this->_values[$name]);
+        unset($this->_propertiesModified[$name]);
     }
 
     /**
@@ -418,6 +443,9 @@ abstract class Deneb_Object_Common
     public function set(array $values)
     {
         $this->_values = $values;
+        foreach (array_keys($values) as $name) {
+            $this->_propertiesModified[$name] = true;
+        }
     }
 
     /**
@@ -489,9 +517,16 @@ abstract class Deneb_Object_Common
             throw new static::$_exceptionName('Primary key value is not set');
         }
 
-        $where = "{$this->_primaryKey} = {$this->_values[$this->_primaryKey]}";
-        $this->_getWriteDB()->update($this->_table, $this->_values, $where);
-        $this->updateCache();
+        if (count($this->_propertiesModified)) {
+            $valuesToWrite = array();
+            foreach ($this->_propertiesModified as $name => $present) {
+                $valuesToWrite[$name] = $this->_values[$name];
+            }
+
+            $where = "{$this->_primaryKey} = {$this->_values[$this->_primaryKey]}";
+            $this->_getWriteDB()->update($this->_table, $valuesToWrite, $where);
+        }
+        $this->invalidateCache();
     }
 
     /**
