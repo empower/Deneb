@@ -38,16 +38,16 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.6.1');
-$packagexml->setReleaseVersion('0.6.1');
+$packagexml->setAPIVersion('0.6.2');
+$packagexml->setReleaseVersion('0.6.2');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added support for status bitfield columns, including helpers
-* Added table name prefix to where clause creation
+* Added option to use integer timestamps for date_created (Dan Copeland)
+* Write only modified properties back to the db on update (Dan Copeland)
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
