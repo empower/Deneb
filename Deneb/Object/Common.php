@@ -50,6 +50,14 @@ abstract class Deneb_Object_Common
     protected $_enableDateCreated = false;
 
     /**
+     * If true, assume date_created is an integer column and write unix timestamps
+     *   to it.  If false (default), assume it's a datetime column.
+     *
+     * @var bool
+     */
+    protected $_dateCreatedAsTimestamp = false;
+
+    /**
      * A list of additional columns to cache an object by
      *
      * @var array
@@ -487,7 +495,9 @@ abstract class Deneb_Object_Common
         if ($this->_enableDateCreated
             && !isset($this->_values['date_created'])) {
 
-            $this->_values['date_created'] = new Zend_Db_Expr('NOW()');
+            $this->_values['date_created'] = ($this->_dateCreatedAsTimestamp
+                ? new Zend_Db_Expr('UNIX_TIMESTAMP()')
+                : new Zend_Db_Expr('NOW()'));
         }
 
         $this->_getWriteDB()->insert($this->_table, $this->_values);
