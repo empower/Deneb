@@ -294,4 +294,56 @@ class Deneb_DummyTest extends Deneb_TestCase
         $this->_object->__construct();
         $this->_object->unsetStatus('foobar');
     }
+
+    public function testSlowQueryLog()
+    {
+        Deneb::setSlowQueryThreshold(-1);
+        $logger = $this->getMock('Zend_Log', array('warn', 'debug', 'info'));
+        $logger->expects($this->once())
+               ->method('warn')
+               ->will($this->returnValue(null));
+        $logger->expects($this->exactly(0))
+               ->method('debug')
+               ->will($this->returnValue(null));
+        Deneb::setLog($logger);
+
+        $results = array(array(
+            'id' => 1,
+            'username' => 'dcopeland',
+        ));
+
+        $stmt1 = Zend_Test_DbStatement::createSelectStatement($results);
+        $this->_connectionMock->appendStatementToStack($stmt1);
+        $this->_object->__construct();
+        $this->assertSame(
+            $results,
+            $this->_object->fetchAll('SELECT * FROM users WHERE id = 1')
+        );
+    }
+
+    public function testSlowQueryLogDisabled()
+    {
+        Deneb::setSlowQueryThreshold(0);
+        $logger = $this->getMock('Zend_Log', array('warn', 'debug', 'info'));
+        $logger->expects($this->exactly(0))
+               ->method('warn')
+               ->will($this->returnValue(null));
+        $logger->expects($this->once())
+               ->method('debug')
+               ->will($this->returnValue(null));
+        Deneb::setLog($logger);
+
+        $results = array(array(
+            'id' => 1,
+            'username' => 'dcopeland',
+        ));
+
+        $stmt1 = Zend_Test_DbStatement::createSelectStatement($results);
+        $this->_connectionMock->appendStatementToStack($stmt1);
+        $this->_object->__construct();
+        $this->assertSame(
+            $results,
+            $this->_object->fetchAll('SELECT * FROM users WHERE id = 1')
+        );
+    }
 }

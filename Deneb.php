@@ -72,6 +72,14 @@ abstract class Deneb
     static protected $_cache = null;
 
     /**
+     * Number of milliseconds of execution after which a SQL query should be
+     *   logged as a slow query
+     *
+     * @var integer
+     */
+    static protected $_slowQueryThreshold = 500;
+
+    /**
      * The read instance of {@link Zend_Db_Adapter}
      *
      * @var Zend_Db_Adapter
@@ -279,6 +287,62 @@ abstract class Deneb
     }
 
     /**
+     * Wrapper for DB adapter's fetchAll method to add logging
+     *
+     * @param string $sql
+     * @param Zend_Db_Adapter $dbAdapter DB adapter to use, default readDB
+     *
+     * @return array DB rows
+     */
+    public function fetchAll($sql, $dbAdapter = null)
+    {
+        if ($dbAdapter === null) {
+            $dbAdapter = $this->_getReadDB();
+        }
+        $startTime = microtime(true);
+        $result    = $dbAdapter->fetchAll($sql);
+        $endTime   = microtime(true);
+        $ms        = (int)(($endTime - $startTime) * 1000);
+        if (self::$_slowQueryThreshold && $ms >= self::$_slowQueryThreshold) {
+            $this->getLog()->warn('SLOW SQL query (' . $ms . ' ms): ' . $sql);
+        } else {
+            $this->getLog()->debug('SQL query (' . $ms . ' ms): ' . $sql);
+        }
+        return $result;
+    }
+
+    /**
+     * Wrapper for DB statement's fetchColumn method to add logging
+     *
+     * @param string $sql
+     * @param integer $col Column number to retrieve, default 0
+     * @param Zend_Db_Adapter $dbAdapter DB adapter to use, default readDB
+     *
+     * @return array DB rows
+     */
+    public function fetchColumn($sql, $col = 0, $dbAdapter = null)
+    {
+        if ($dbAdapter === null) {
+            $dbAdapter = $this->_getReadDB();
+        }
+        $startTime = microtime(true);
+        $result    = $dbAdapter->query($sql)->fetchColumn($col);
+        $endTime   = microtime(true);
+        $ms        = (int)(($endTime - $startTime) * 1000);
+        if (self::$_slowQueryThreshold && $ms >= self::$_slowQueryThreshold) {
+            $this->getLog()->warn('SLOW SQL query (' . $ms . ' ms): ' . $sql);
+        } else {
+            $this->getLog()->debug('SQL query (' . $ms . ' ms): ' . $sql);
+        }
+        return $result;
+    }
+
+    /**
+     * Gets an instance of the logger
+     *
+     * @return Zend_Log
+     */
+     /**
      * Gets an instance of the logger
      *
      * @return Zend_Log
@@ -369,5 +433,28 @@ abstract class Deneb
     public function getCache()
     {
         return self::$_cache;
+    }
+
+    /**
+     * Set the number of milliseconds of execution after which a SQL query
+     *   should be logged as a slow query, or zero to disable slow query
+     *   loging
+     *
+     * @param integer $threshold Slow query threshold in milliseconds
+     */
+    static public function setSlowQueryThreshold($threshold)
+    {
+        self::$_slowQueryThreshold = (int)$threshold;
+    }
+
+    /**
+     * Get the number of milliseconds of execution after which a SQL query
+     *   should be logged as a slow query
+     *
+     * @return integer Slow query threshold in milliseconds
+     */
+    static public function getSlowQueryThreshold()
+    {
+        return self::$_slowQueryThreshold;
     }
 }

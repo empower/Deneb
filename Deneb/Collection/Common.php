@@ -146,8 +146,7 @@ implements Iterator, Countable
         } else {
             // Look up IDs from the DB
             $sql = "SELECT {$pk} FROM {$this->_table} $where $limits";
-            $this->getLog()->debug('Collection SQL by key: ' . $sql);
-            $keyResults = $this->_getReadDB()->fetchAll($sql);
+            $keyResults = $this->fetchAll($sql);
         }
 
         if (!count($keyResults)) {
@@ -176,8 +175,7 @@ implements Iterator, Countable
                 array($pk => array_keys($misses))
             );
             $sql = "SELECT * FROM {$this->_table} $idWhere";
-            $this->getLog()->debug('Collection SQL for misses: ' . $sql);
-            $missResults = $this->_getReadDB()->fetchAll($sql);
+            $missResults = $this->fetchAll($sql);
 
             foreach ($missResults as $result) {
                 $misses[$result[$pk]] = $result;
@@ -227,8 +225,7 @@ implements Iterator, Countable
     protected function _fetchFromDB($where, $limits)
     {
         $sql = "SELECT * FROM {$this->_table} $where $limits";
-        $this->getLog()->debug('Collection SQL: ' . $sql);
-        $results = $this->_getReadDB()->fetchAll($sql);
+        $results = $this->fetchAll($sql);
         if (!count($results)) {
             throw new static::$_exceptionNotFoundName(
                 'No ' . $this->_name . ' objects found'
@@ -308,8 +305,7 @@ implements Iterator, Countable
     {
         $where  = $this->_determineWhere($this->_args);
         $sql = "SELECT COUNT(*) FROM {$this->_table} $where";
-        $this->getLog()->debug('Collection countAll SQL: ' . $sql);
-        return (int) $this->_getReadDB()->query($sql)->fetchColumn();
+        return (int) $this->fetchColumn($sql);
     }
 
     /**

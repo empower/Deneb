@@ -171,4 +171,56 @@ class Deneb_DummyCollectionTest extends Deneb_TestCase
         $this->_object->fetch();
         $this->assertSame(array(1,2), $this->_object->getPrimaryKeys());
     }
+
+    public function testSlowQueryLog()
+    {
+        Deneb::setSlowQueryThreshold(-1);
+        $logger = $this->getMock('Zend_Log', array('warn', 'debug', 'info'));
+        $logger->expects($this->once())
+               ->method('warn')
+               ->will($this->returnValue(null));
+        $logger->expects($this->exactly(0))
+               ->method('debug')
+               ->will($this->returnValue(null));
+        Deneb::setLog($logger);
+
+        $results = array(array(
+            'id' => 1,
+            'username' => 'dcopeland',
+        ));
+
+        $stmt1 = Zend_Test_DbStatement::createSelectStatement($results);
+        $this->_connectionMock->appendStatementToStack($stmt1);
+        $this->_object->__construct(array('id' => 1), array('fetch' => false));
+        $this->assertSame(
+            1,
+            $this->_object->fetchColumn('SELECT * FROM users WHERE id = 1')
+        );
+    }
+
+    public function testSlowQueryLogDisabled()
+    {
+        Deneb::setSlowQueryThreshold(0);
+        $logger = $this->getMock('Zend_Log', array('warn', 'debug', 'info'));
+        $logger->expects($this->exactly(0))
+               ->method('warn')
+               ->will($this->returnValue(null));
+        $logger->expects($this->once())
+               ->method('debug')
+               ->will($this->returnValue(null));
+        Deneb::setLog($logger);
+
+        $results = array(array(
+            'id' => 1,
+            'username' => 'dcopeland',
+        ));
+
+        $stmt1 = Zend_Test_DbStatement::createSelectStatement($results);
+        $this->_connectionMock->appendStatementToStack($stmt1);
+        $this->_object->__construct(array('id' => 1), array('fetch' => false));
+        $this->assertSame(
+            1,
+            $this->_object->fetchColumn('SELECT * FROM users WHERE id = 1')
+        );
+    }
 }

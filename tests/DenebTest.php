@@ -17,4 +17,13 @@ class DenebTest extends Deneb_TestCase
         Deneb::setCache(null);
         $this->assertNull($this->_object->getCache());
     }
+
+    public function testSetSlowQueryThreshold()
+    {
+        $default = Deneb::getSlowQueryThreshold();
+        Deneb::setSlowQueryThreshold(100);
+        $this->assertSame(100, Deneb::getSlowQueryThreshold());
+        Deneb::setSlowQueryThreshold($default);
+        $this->assertSame($default, Deneb::getSlowQueryThreshold());
+    }
 }

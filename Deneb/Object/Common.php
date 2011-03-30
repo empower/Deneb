@@ -192,8 +192,7 @@ abstract class Deneb_Object_Common
         $where = $this->_determineWhere($args);
 
         $sql = "SELECT * FROM {$this->_table} $where";
-        $this->getLog()->debug("Object SQL: " . $sql);
-        $this->_results = $db->fetchAll($sql);
+        $this->_results = $this->fetchAll($sql, $db);
         if (!count($this->_results)) {
             throw new static::$_exceptionNotFoundName(
                 'No ' . $this->_object . ' found: '
