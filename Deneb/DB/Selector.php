@@ -83,6 +83,14 @@ class Deneb_DB_Selector
      */
     static protected $_instances = array();
 
+    /**
+     * Determines the DB connection parameters from the Zend_Application instance
+     *
+     * @param Zend_Application $application The current application instance
+     * @param string           $selector    The selector name
+     *
+     * @return void
+     */
     public function __construct(Zend_Application $application, $selector)
     {
         $this->_dbConfig = $application->getOption('db');
