@@ -38,16 +38,16 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.6.2');
-$packagexml->setReleaseVersion('0.6.2');
+$packagexml->setAPIVersion('0.7.0');
+$packagexml->setReleaseVersion('0.7.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added option to use integer timestamps for date_created (Dan Copeland)
-* Write only modified properties back to the db on update (Dan Copeland)
+* Use $model->fetchAll($sql) / $model->fetchColumn($sql) for automatic debug level logging of SQL queries with execution time
+* Slow queries logged at warning level - use Deneb::setSlowQueryThreshold() to define slow
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
