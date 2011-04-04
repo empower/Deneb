@@ -38,16 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.7.0');
-$packagexml->setReleaseVersion('0.7.0');
+$packagexml->setAPIVersion('0.7.1');
+$packagexml->setReleaseVersion('0.7.1');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Use $model->fetchAll($sql) / $model->fetchColumn($sql) for automatic debug level logging of SQL queries with execution time
-* Slow queries logged at warning level - use Deneb::setSlowQueryThreshold() to define slow
+* Log SQL used when fetchAll throw an exception
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();

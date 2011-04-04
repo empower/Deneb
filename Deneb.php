@@ -300,7 +300,12 @@ abstract class Deneb
             $dbAdapter = $this->_getReadDB();
         }
         $startTime = microtime(true);
-        $result    = $dbAdapter->fetchAll($sql);
+        try {
+            $result = $dbAdapter->fetchAll($sql);
+        } catch (Exception $e) {
+            $this->getLog()->crit('Exception SQL query : ' . $sql);
+            throw $e;
+        }
         $endTime   = microtime(true);
         $ms        = (int)(($endTime - $startTime) * 1000);
         if (self::$_slowQueryThreshold && $ms >= self::$_slowQueryThreshold) {

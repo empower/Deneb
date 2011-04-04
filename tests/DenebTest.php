@@ -26,4 +26,22 @@ class DenebTest extends Deneb_TestCase
         Deneb::setSlowQueryThreshold($default);
         $this->assertSame($default, Deneb::getSlowQueryThreshold());
     }
+
+    public function testFetchAllException()
+    {
+        $this->setExpectedException('Deneb_Exception');
+
+        $adapter = $this->getMock('Zend_Db_Adapter_Pdo_Mysql', array('fetchAll'), array(), '', false);
+        $adapter->expects($this->once())
+                ->method('fetchAll')
+                ->will($this->throwException(new Deneb_Exception()));
+
+        $logger = $this->getMock('Zend_Log', array('crit'), array(), '', false);
+        $logger->expects($this->once())
+               ->method('crit')
+               ->will($this->returnValue(null));
+        Deneb::setLog($logger);
+
+        $this->_object->fetchAll('SELECT * from foo', $adapter);
+    }
 }
