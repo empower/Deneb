@@ -112,6 +112,14 @@ abstract class Deneb_Object_Common
     protected $_values = array();
 
     /**
+     * The values of the object properties at load time - needed in case of update
+     *   (i.e. to clear no longer valid secondary indexes)
+     *
+     * @var array
+     */
+    protected $_valuesAtLoad = array();
+
+    /**
      * Names of object properties that have been modified since loading - only those
      *   fields will be written to the database by update()
      *
@@ -167,7 +175,7 @@ abstract class Deneb_Object_Common
             // Try to get the data from the cache
             $fromCache = $this->getFromCache($args);
             if ($fromCache !== false) {
-                $this->_values = $fromCache;
+                $this->initializeValues($fromCache);
                 return;
             }
 
@@ -200,7 +208,7 @@ abstract class Deneb_Object_Common
                 . print_r($args, true)
             );
         }
-        $this->_values = current($this->_results);
+        $this->initializeValues(current($this->_results));
     }
 
     /**
@@ -250,6 +258,27 @@ abstract class Deneb_Object_Common
     }
 
     /**
+     * Sets initial values for all properties of an object.  To be called ONLY on an
+     *   uninitialized object - for other purposes use set().
+     *
+     * @param array $values Associative array of property/values
+     *
+     * @see $_values, set()
+     * @return void
+     */
+    public function initializeValues(array $values)
+    {
+        if (count($this->_values) > 0) {
+            throw new static::$_exceptionName(
+                'Cannot call initializeValues() on already initialized object!'
+            );
+        }
+        $this->_values       = $values;
+        $this->_valuesAtLoad = $values;
+    }
+
+
+    /**
      * Gets an array of cache indexes for use with
      * {@link Deneb_Object_Common::getCacheKey()}.  Includes the primary key,
      * as well as any additional indexes.
@@ -286,6 +315,15 @@ abstract class Deneb_Object_Common
         foreach ($indexes as $index) {
             $key = $this->getCacheKey($index, $this->_values[$index]);
             $cache->remove($key);
+
+            //  Also invalidate for OLD value of the relevant property if there is
+            //  one
+            if (isset($this->_valuesAtLoad[$index])
+                && ($this->_valuesAtLoad[$index] !== $this->_values[$index])) {
+
+                $key = $this->getCacheKey($index, $this->_valuesAtLoad[$index]);
+                $cache->remove($key);
+            }
         }
     }
 
@@ -299,6 +337,7 @@ abstract class Deneb_Object_Common
         if (!$this->isCacheable()) {
             return false;
         }
+        $this->invalidateCache();
 
         $cache   = $this->getCache();
         $indexes = $this->_getCacheIndexes();
@@ -509,6 +548,7 @@ abstract class Deneb_Object_Common
         }
 
         $args = array($this->_primaryKey => $pkValue);
+        $this->_values = array();
         $this->_loadFromDB($args, 'write');
         $this->updateCache();
     }

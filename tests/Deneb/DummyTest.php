@@ -346,4 +346,23 @@ class Deneb_DummyTest extends Deneb_TestCase
             $this->_object->fetchAll('SELECT * FROM users WHERE id = 1')
         );
     }
+
+    public function testInitializeValuesException()
+    {
+        $this->_object->__construct();
+
+        $newContents = array(
+            'id' => 1,
+            'username' => 'shupp',
+            'email' => 'bshupp@empowercampaigns.com',
+        );
+
+        $this->_object->set($newContents);
+
+        $this->setExpectedException(
+            'Deneb_Exception',
+            'Cannot call initializeValues() on already initialized object!'
+        );
+        $this->_object->initializeValues($newContents);
+    }
 }

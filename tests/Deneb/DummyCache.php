@@ -46,4 +46,11 @@ class Deneb_DummyCache extends Deneb_Object_Common
      * @var string
      */
     protected $_selector = 'default';
+
+    /**
+     * A list of additional columns to cache an object by
+     *
+     * @var array
+     */
+    protected $_additionalCacheIndexes = array('email');
 }

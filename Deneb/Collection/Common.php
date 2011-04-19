@@ -261,7 +261,7 @@ implements Iterator, Countable
     protected function _loadObject(array $result)
     {
         $instance = new $this->_object;
-        $instance->set($result);
+        $instance->initializeValues($result);
         $pk = $instance->getPrimaryKey();
         $this->_collectionByPrimaryKey[$instance->{$pk}] = $instance;
 
