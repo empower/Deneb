@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2011-04-04</date>
- <time>14:26:48</time>
+ <date>2011-04-27</date>
+ <time>14:30:38</time>
  <version>
-  <release>0.7.1</release>
-  <api>0.7.1</api>
+  <release>0.7.2</release>
+  <api>0.7.2</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,7 +25,7 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Log SQL used when fetchAll throw an exception
+* Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -251,6 +251,21 @@
    <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
    <notes>
 * Log SQL used when fetchAll throw an exception
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.7.2</release>
+    <api>0.7.2</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-04-27</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
    </notes>
   </release>
  </changelog>

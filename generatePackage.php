@@ -38,15 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.7.1');
-$packagexml->setReleaseVersion('0.7.1');
+$packagexml->setAPIVersion('0.7.2');
+$packagexml->setReleaseVersion('0.7.2');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Log SQL used when fetchAll throw an exception
+* Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
