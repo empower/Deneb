@@ -226,6 +226,16 @@ abstract class Deneb_Object_Common
     }
 
     /**
+     * Determines if this object has multi cache support enabled
+     *
+     * @return bool
+     */
+    public function cacheMultiEnabled()
+    {
+        return ($this->isCacheable() && self::$_cacheMultiSupport);
+    }
+
+    /**
      * Gets object data from the cache and returns it.
      *
      * @param array $args
@@ -255,6 +265,31 @@ abstract class Deneb_Object_Common
         }
 
         return false;
+    }
+
+    public function getMultiFromCache(array $ids, $index)
+    {
+        if (!$this->cacheMultiEnabled()) {
+            return array();
+        }
+
+        $cache = $this->getCache();
+
+        $keys = array();
+        foreach ($ids as $id) {
+            $keys[$id] = $this->getCacheKey($index, $id);
+        }
+
+        $fromCache = $cache->loadMulti(array_values($keys));
+
+        $returnValues = array();
+        foreach ($keys as $id => $key) {
+            if (isset($fromCache[$key])) {
+                $returnValues[$id] = unserialize($fromCache[$key]);
+            }
+        }
+
+        return $returnValues;
     }
 
     /**
@@ -346,6 +381,43 @@ abstract class Deneb_Object_Common
             $key = $this->getCacheKey($index, $this->_values[$index]);
             $cache->save($data, $key);
         }
+    }
+
+    /**
+     * Update multiple cache objects at once.  The invalidations are done in
+     * series, but the set is done in bulk.
+     *
+     * @param Deneb_Collection_Common $collection The colleciton of objects to update
+     *
+     * @return bool
+     */
+    public function updateCacheMulti($collection)
+    {
+        if (!$this->cacheMultiEnabled()) {
+            return false;
+        }
+
+        // Must invalidate cache in series, multi delete is not supported in
+        // the memcached protocol
+        foreach ($collection as $item) {
+            $item->invalidateCache();
+        }
+
+        $cache   = $this->getCache();
+        $indexes = $this->_getCacheIndexes();
+
+        // Build up items list to store
+        $items = array();
+        foreach ($collection as $item) {
+            $values = $item->getAllValues();
+
+            foreach ($indexes as $index) {
+                $key = $this->getCacheKey($index, $values[$index]);
+                $items[$key] = serialize($values);
+            }
+        }
+
+        return $cache->saveMulti($items);
     }
 
     /**
@@ -509,6 +581,17 @@ abstract class Deneb_Object_Common
             unset($values[$name]);
         }
         return $values;
+    }
+
+    /**
+     * Returns all values, including protected fields.  Required for multi set
+     * in memcached.
+     *
+     * @return array
+     */
+    public function getAllValues()
+    {
+        return $this->_values;
     }
 
     /**

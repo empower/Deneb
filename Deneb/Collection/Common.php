@@ -129,7 +129,8 @@ implements Iterator, Countable
      */
     protected function _fetchFromCacheOrDB($where, $limits, $object)
     {
-        $pk = $object->getPrimaryKey();
+        $pk           = $object->getPrimaryKey();
+        $multiEnabled = $object->cacheMultiEnabled();
 
         // See if we can skip the ID lookup
 
@@ -157,10 +158,26 @@ implements Iterator, Countable
 
         // Order results and check the cache first
         $orderedList = array();
-        foreach ($keyResults as $result) {
-            $orderedList[$result[$pk]] = $object->getFromCache(
-                array($pk => $result[$pk])
-            );
+        if ($multiEnabled) {
+            // Get key values
+            $keys = array();
+            foreach ($keyResults as $result) {
+                $keys[] = $result[$pk];
+            }
+            $multiResults = $object->getMultiFromCache($keys, $pk);
+            // Populate misses with false
+            $orderedList = array();
+            foreach ($keys as $key) {
+                $orderedList[$key] = isset($multiResults[$key])
+                                     ? $multiResults[$key]
+                                     : false;
+            }
+        } else {
+            foreach ($keyResults as $result) {
+                $orderedList[$result[$pk]] = $object->getFromCache(
+                    array($pk => $result[$pk])
+                );
+            }
         }
 
         // Fetch misses from DB if present
@@ -207,8 +224,16 @@ implements Iterator, Countable
         $this->_loadObjects($orderedList);
 
         // Update cache for any misses
-        foreach (array_keys($misses) as $miss) {
-            $this->getByPrimaryKey($miss)->updateCache();
+        if ($multiEnabled) {
+            $updates = array();
+            foreach (array_keys($misses) as $miss) {
+                $updates[] = $this->getByPrimaryKey($miss);
+            }
+            $object->updateCacheMulti($updates);
+        } else {
+            foreach (array_keys($misses) as $miss) {
+                $this->getByPrimaryKey($miss)->updateCache();
+            }
         }
     }
 

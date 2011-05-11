@@ -3,13 +3,13 @@
 require_once 'Deneb/Dummy.php';
 require_once 'Deneb/TestCase.php';
 
-class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
+class Deneb_DummyCacheMultiCollectionTest extends Deneb_TestCase
 {
     protected $_objectName = 'Deneb_DummyCacheCollection';
 
     public function testConstructor()
     {
-        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
+        $cache = Zend_Cache::factory('EC_Cache_Frontend_CoreMulti', 'EC_Cache_Backend_MockMulti', array(), array(), true, true);
         Deneb::setCache($cache);
 
         $ids = array(
@@ -82,7 +82,7 @@ class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
     {
         $this->setExpectedException('Deneb_Exception_NotFound');
 
-        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
+        $cache = Zend_Cache::factory('EC_Cache_Frontend_CoreMulti', 'EC_Cache_Backend_MockMulti', array(), array(), true, true);
         Deneb::setCache($cache);
 
         $stmt1 = Zend_Test_DbStatement::createSelectStatement(array());
@@ -96,7 +96,7 @@ class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
     {
         $this->setExpectedException('Deneb_Exception_NotFound');
 
-        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
+        $cache = Zend_Cache::factory('EC_Cache_Frontend_CoreMulti', 'EC_Cache_Backend_MockMulti', array(), array(), true, true);
         Deneb::setCache($cache);
 
         $stmt1 = Zend_Test_DbStatement::createSelectStatement(array('id' => 1));
@@ -111,7 +111,7 @@ class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
 
     public function testConstructorWithArrayOfPKs()
     {
-        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
+        $cache = Zend_Cache::factory('EC_Cache_Frontend_CoreMulti', 'EC_Cache_Backend_MockMulti', array(), array(), true, true);
         Deneb::setCache($cache);
 
         $dummyCache = new Deneb_DummyCache();
@@ -142,6 +142,19 @@ class Deneb_DummyCacheCollectionTest extends Deneb_TestCase
         $this->assertSame(2, $this->_object->current()->id);
         $this->_object->next();
         $this->assertFalse($this->_object->valid());
+    }
+
+    // Test a couple of object cases
+    public function testDenebObjectCommonGetMultiFromCacheNoMultiSupport()
+    {
+        $mock = $this->getMock('Deneb_Dummy', array('update', 'create', 'delete'), array(), '', false);
+        $this->assertEmpty($mock->getMultiFromCache(array(1), 'id'));
+    }
+
+    public function testDenebObjectCommonUpdateCacheMultiNoMultiSupport()
+    {
+        $mock = $this->getMock('Deneb_Dummy', array('update', 'create', 'delete'), array(), '', false);
+        $this->assertFalse($mock->updateCacheMulti(array('foo' => 'bar')));
     }
 
     public function tearDown()

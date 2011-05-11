@@ -72,6 +72,11 @@ abstract class Deneb
     static protected $_cache = null;
 
     /**
+     * Whether or not loadMulti/saveMulti support exists
+     */
+    static protected $_cacheMultiSupport = false;
+
+    /**
      * Number of milliseconds of execution after which a SQL query should be
      *   logged as a slow query
      *
@@ -419,7 +424,8 @@ abstract class Deneb
     }
 
     /**
-     * Sets an instance of {@link Zend_Cache} to use
+     * Sets an instance of {@link Zend_Cache} to use, and stores whether it
+     * supports multi get/set
      *
      * @param Zend_Cache $cache The Zend_Cache instance
      *
@@ -428,6 +434,9 @@ abstract class Deneb
     static public function setCache($cache)
     {
         self::$_cache = $cache;
+        if ($cache instanceof EC_Cache_MultiInterface) {
+            self::$_cacheMultiSupport = true;
+        }
     }
 
     /**

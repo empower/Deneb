@@ -11,7 +11,7 @@ class DenebTest extends Deneb_TestCase
 
     public function testSetCache()
     {
-        $cache = Zend_Cache::factory('Core', 'Mock');
+        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
         Deneb::setCache($cache);
         $this->assertSame($cache, $this->_object->getCache());
         Deneb::setCache(null);

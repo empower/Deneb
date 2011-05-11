@@ -38,15 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.7.2');
-$packagexml->setReleaseVersion('0.7.2');
+$packagexml->setAPIVersion('0.8.0');
+$packagexml->setReleaseVersion('0.8.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
+* Switched to EC_Cache dependency and added support for multi get/set methods in memcached
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
@@ -63,8 +63,8 @@ $packagexml->setLicense('New BSD License',
 
 $packagexml->setPhpDep('5.0.0');
 $packagexml->setPearinstallerDep('1.4.0b1');
-$packagexml->addPackageDepWithChannel('required', 'Zend', 'zend.googlecode.com/svn', '1.11.0');
-$packagexml->addPackageDepWithChannel('required', 'Zend_Cache_Backend_Mock', 'empower.github.com/pirum', '0.1.0');
+$packagexml->addPackageDepWithChannel('required', 'Zend', 'zend.googlecode.com/svn', '1.11.6');
+$packagexml->addPackageDepWithChannel('required', 'EC_Cache', 'empower.github.com/pirum', '0.1.0');
 
 $packagexml->generateContents();
 $packagexml->writePackageFile();

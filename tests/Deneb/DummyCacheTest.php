@@ -10,7 +10,7 @@ class Deneb_DummyCacheTest extends Deneb_TestCase
 
     public function testConstructorWithArgumentsAndCache()
     {
-        $cache = Zend_Cache::factory('Core', 'Mock');
+        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
         Deneb::setCache($cache);
 
         $id = 1;
@@ -53,7 +53,7 @@ class Deneb_DummyCacheTest extends Deneb_TestCase
 
     public function testInvalidateAdditionalIndexes()
     {
-        $cache = Zend_Cache::factory('Core', 'Mock');
+        $cache = Zend_Cache::factory('Core', 'EC_Cache_Backend_Mock', array(), array(), false, true);
         Deneb::setCache($cache);
 
         $id = 1;

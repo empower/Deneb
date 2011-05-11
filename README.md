@@ -1,7 +1,7 @@
 Deneb: A simple CRUD layer for Zend_Db based models
 ===================================================
 
-Deneb provides a consistent CRUD interface to using Zend_Db based models and model collections, as well as segregated read and write DB pools and selectors.  Provided are common classes for single objects, as well as collections of objects.  Other features include attaching Zend_Log and Zend_Cache interfaces.
+Deneb provides a consistent CRUD interface to using Zend_Db based models and model collections, as well as segregated read and write DB pools and selectors.  Provided are common classes for single objects, as well as collections of objects.  Other features include attaching Zend_Log and Zend_Cache interfaces, as well as EC_Cache for multi set/get with memcached.
 
 Here's an example model, Model_User:
 
@@ -39,7 +39,7 @@ Here's an example model, Model_User:
         /**
          * Whether caching should be enabled for this model.
          * Enabled by default.
-         * 
+         *
          * @var bool
          */
         protected $_cacheEnabled = true;
@@ -89,28 +89,28 @@ Here's an example model collection:
     {
         /**
          * The name of the singular object
-         * 
+         *
          * @var string
          */
         protected $_object = 'Model_User';
 
         /**
          * The name of the object for use in exception messages
-         * 
+         *
          * @var string
          */
         protected $_name = 'user';
 
         /**
          * The table to use in the DB
-         * 
+         *
          * @var string
          */
         protected $_table = 'users';
 
         /**
          * The DB selector
-         * 
+         *
          * @var string
          */
         protected $_selector = 'default';
@@ -133,6 +133,11 @@ Collection model example:
 Transparent caching with Zend_Cache:
 
     $cache = Zend_Cache::factory('Core', 'Libmemcached');
+    Deneb::setCache($cache);
+
+Transparent multi get/set caching with EC_Cache:
+
+    $cache = Zend_Cache::factory('EC_Cache_CoreMulti', 'EC_Cache_Backend_LibmemcachedMulti');
     Deneb::setCache($cache);
 
 

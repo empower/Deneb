@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2011-04-27</date>
- <time>14:30:38</time>
+ <date>2011-05-12</date>
+ <time>10:59:22</time>
  <version>
-  <release>0.7.2</release>
-  <api>0.7.2</api>
+  <release>0.8.0</release>
+  <api>0.8.0</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,7 +25,7 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
+* Switched to EC_Cache dependency and added support for multi get/set methods in memcached
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -56,6 +56,7 @@
      <file name="DummyCache.php" role="test" />
      <file name="DummyCacheCollection.php" role="test" />
      <file name="DummyCacheCollectionTest.php" role="test" />
+     <file name="DummyCacheMultiCollectionTest.php" role="test" />
      <file name="DummyCacheTest.php" role="test" />
      <file name="DummyCollection.php" role="test" />
      <file name="DummyCollectionTest.php" role="test" />
@@ -80,10 +81,10 @@
    <package>
     <name>Zend</name>
     <channel>zend.googlecode.com/svn</channel>
-    <min>1.11.0</min>
+    <min>1.11.6</min>
    </package>
    <package>
-    <name>Zend_Cache_Backend_Mock</name>
+    <name>EC_Cache</name>
     <channel>empower.github.com/pirum</channel>
     <min>0.1.0</min>
    </package>
@@ -266,6 +267,21 @@
    <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
    <notes>
 * Fixed a caching bug with secondary indexes - after update a stale object would still be cached under the old value for the index
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.8.0</release>
+    <api>0.8.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-05-12</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Switched to EC_Cache dependency and added support for multi get/set methods in memcached
    </notes>
   </release>
  </changelog>
