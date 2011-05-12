@@ -267,6 +267,16 @@ abstract class Deneb_Object_Common
         return false;
     }
 
+    /**
+     * Gets multiple items from cache using a single index and in one call to
+     * the cache backend.  Requires the cache instance to support
+     * EC_Cache_MultiInterface.
+     *
+     * @param array  $ids   Array of ids to look up
+     * @param string $index The index to use for the lookups (i.e. id, email, etc)
+     *
+     * @return array
+     */
     public function getMultiFromCache(array $ids, $index)
     {
         if (!$this->cacheMultiEnabled()) {
