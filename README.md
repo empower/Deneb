@@ -137,7 +137,14 @@ Transparent caching with Zend_Cache:
 
 Transparent multi get/set caching with EC_Cache:
 
-    $cache = Zend_Cache::factory('EC_Cache_CoreMulti', 'EC_Cache_Backend_LibmemcachedMulti');
+    $cache = Zend_Cache::factory(
+        'EC_Cache_CoreMulti',
+        'EC_Cache_Backend_LibmemcachedMulti'
+        $frontendOptions,
+        $backendOptions,
+        true,
+        true
+    );
     Deneb::setCache($cache);
 
 
