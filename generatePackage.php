@@ -38,16 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.8.1');
-$packagexml->setReleaseVersion('0.8.1');
+$packagexml->setAPIVersion('0.9.0');
+$packagexml->setReleaseVersion('0.9.0');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Updated ZF channel dependency
-* Fixed some doc blocks
+* Moved date created timestamp creation from DB into PHP
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
