@@ -627,7 +627,7 @@ abstract class Deneb_Object_Common
             && !isset($this->_values['date_created'])) {
 
             $this->_values['date_created'] = ($this->_dateCreatedAsTimestamp
-                ? new Zend_Db_Expr('UNIX_TIMESTAMP()')
+                ? time()
                 : new Zend_Db_Expr('NOW()'));
         }
 
