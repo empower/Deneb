@@ -163,16 +163,17 @@ class Deneb_DummyTest extends Deneb_TestCase
 
         $stmt1 = Zend_Test_DbStatement::createSelectStatement(array($data1));
         $stmt2 = Zend_Test_DbStatement::createUpdateStatement(1);
-        $this->_connectionMock->appendStatementToStack($stmt1);
-        $this->_connectionMock->appendStatementToStack($stmt2);
+        $stmt3 = Zend_Test_DbStatement::createSelectStatement(array($data2));
 
-        $this->_object->__construct();
-        $contents = $this->_object->get();
-        $this->assertTrue(empty($contents));
+        $this->_connectionMock->appendStatementToStack($stmt3);
+        $this->_connectionMock->appendStatementToStack($stmt2);
+        $this->_connectionMock->appendStatementToStack($stmt1);
+
+        $this->_object->__construct(array('id' => 1));
+        $this->assertSame($data1, $this->_object->get());
 
         $this->_object->set($data2);
         $this->_object->update();
-
         $this->assertSame($data2, $this->_object->get());
     }
 
