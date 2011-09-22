@@ -38,15 +38,16 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.9.0');
-$packagexml->setReleaseVersion('0.9.0');
+$packagexml->setAPIVersion('0.9.1');
+$packagexml->setReleaseVersion('0.9.1');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Moved date created timestamp creation from DB into PHP
+* Added a write to cache on update
+* Added a call to quote() for the primary key value on delete
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();

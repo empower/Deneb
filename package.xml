@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2011-08-02</date>
- <time>15:29:52</time>
+ <date>2011-09-21</date>
+ <time>19:40:12</time>
  <version>
-  <release>0.9.0</release>
-  <api>0.9.0</api>
+  <release>0.9.1</release>
+  <api>0.9.1</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,7 +25,8 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Moved date created timestamp creation from DB into PHP
+* Added a write to cache on update
+* Added a call to quote() for the primary key value on delete
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -313,6 +314,22 @@
    <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
    <notes>
 * Moved date created timestamp creation from DB into PHP
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.1</release>
+    <api>0.9.1</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-09-21</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Added a write to cache on update
+* Added a call to quote() for the primary key value on delete
    </notes>
   </release>
  </changelog>
