@@ -698,7 +698,7 @@ abstract class Deneb_Object_Common
         }
 
         $where  = $this->_primaryKey . ' = ';
-        $where .= $this->_values[$this->_primaryKey];
+        $where .= $this->_getWriteDB()->quote($this->_values[$this->_primaryKey]);
         $this->_getWriteDB()->delete($this->_table, $where);
         $this->invalidateCache();
     }
