@@ -285,11 +285,25 @@ implements Iterator, Countable
      */
     protected function _loadObject(array $result)
     {
-        $instance = new $this->_object;
-        $instance->initializeValues($result);
-        $pk = $instance->getPrimaryKey();
+        $instance = $this->_createObjectFromResult($result);
+        $pk       = $instance->getPrimaryKey();
         $this->_collectionByPrimaryKey[$instance->{$pk}] = $instance;
 
+        return $instance;
+    }
+
+    /**
+     * Instanciates an object and initialize it with the result values array.
+     * Abstracted for testing.
+     *
+     * @param array $result The object values
+     *
+     * @return Deneb_Object_Common
+     */
+    protected function _createObjectFromResult(array $result)
+    {
+        $instance = new $this->_object;
+        $instance->initializeValues($result);
         return $instance;
     }
 

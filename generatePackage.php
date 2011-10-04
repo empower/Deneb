@@ -38,16 +38,16 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.9.1');
-$packagexml->setReleaseVersion('0.9.1');
+$packagexml->setAPIVersion('0.9.2');
+$packagexml->setReleaseVersion('0.9.2');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added a write to cache on update
-* Added a call to quote() for the primary key value on delete
+* Added Dene_Collection_Common::_createObjectFromResult() to allow for easier mocking of collections
+* Removed unused test helpers
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
