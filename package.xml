@@ -13,11 +13,11 @@
   <email>hostmaster@shupp.org</email>
   <active>yes</active>
  </lead>
- <date>2011-10-04</date>
- <time>11:36:20</time>
+ <date>2011-10-27</date>
+ <time>11:34:51</time>
  <version>
-  <release>0.9.2</release>
-  <api>0.9.2</api>
+  <release>0.9.3</release>
+  <api>0.9.3</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,8 +25,7 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Added Dene_Collection_Common::_createObjectFromResult() to allow for easier mocking of collections
-* Removed unused test helpers
+* Updated zend dependency
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -80,9 +79,9 @@
     <min>1.4.0b1</min>
    </pearinstaller>
    <package>
-    <name>zf</name>
-    <channel>pear.zfcampus.org</channel>
-    <min>1.11.9</min>
+    <name>Zend</name>
+    <channel>empower.github.com/pirum</channel>
+    <min>1.11.11</min>
    </package>
    <package>
     <name>EC_Cache</name>
@@ -346,6 +345,21 @@
    <notes>
 * Added Dene_Collection_Common::_createObjectFromResult() to allow for easier mocking of collections
 * Removed unused test helpers
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.3</release>
+    <api>0.9.3</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-10-27</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Updated zend dependency
    </notes>
   </release>
  </changelog>

@@ -38,16 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.9.2');
-$packagexml->setReleaseVersion('0.9.2');
+$packagexml->setAPIVersion('0.9.3');
+$packagexml->setReleaseVersion('0.9.3');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Added Dene_Collection_Common::_createObjectFromResult() to allow for easier mocking of collections
-* Removed unused test helpers
+* Updated zend dependency
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();
@@ -64,7 +63,7 @@ $packagexml->setLicense('New BSD License',
 
 $packagexml->setPhpDep('5.0.0');
 $packagexml->setPearinstallerDep('1.4.0b1');
-$packagexml->addPackageDepWithChannel('required', 'zf', 'pear.zfcampus.org', '1.11.9');
+$packagexml->addPackageDepWithChannel('required', 'Zend', 'empower.github.com/pirum', '1.11.11');
 $packagexml->addPackageDepWithChannel('required', 'EC_Cache', 'empower.github.com/pirum', '0.1.1');
 
 $packagexml->generateContents();
