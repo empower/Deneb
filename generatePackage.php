@@ -38,15 +38,15 @@ $packagexml->setDescription(
 );
 
 $packagexml->setChannel('empower.github.com/pirum');
-$packagexml->setAPIVersion('0.9.3');
-$packagexml->setReleaseVersion('0.9.3');
+$packagexml->setAPIVersion('0.9.4');
+$packagexml->setReleaseVersion('0.9.4');
 
 $packagexml->setReleaseStability('alpha');
 
 $packagexml->setAPIStability('alpha');
 
 $packagexml->setNotes('
-* Updated zend dependency
+* Fixed issue where secondary index caches are not invalidated
 ');
 $packagexml->setPackageType('php');
 $packagexml->addRelease();

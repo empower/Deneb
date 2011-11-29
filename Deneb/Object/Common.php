@@ -667,6 +667,7 @@ abstract class Deneb_Object_Common
 
             $where = "{$this->_primaryKey} = {$this->_values[$this->_primaryKey]}";
             $this->_getWriteDB()->update($this->_table, $valuesToWrite, $where);
+            $this->invalidateCache();
         }
 
         //  Actively update the cache with the latest values from the row (which
